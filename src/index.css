@@ -1,0 +1,16 @@
+@font-face {
+  font-family: suite;
+  src: url('./fonts/SUITE-Variable.ttf') format('truetype');
+}
+
+body {
+  margin: 0;
+  font-family: 'suite';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
