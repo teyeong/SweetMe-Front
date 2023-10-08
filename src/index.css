@@ -3,6 +3,19 @@
   src: url('./fonts/SUITE-Variable.ttf') format('truetype');
 }
 
+:root {
+  --gray: #f6f6f6;
+  --navy: #8785a2;
+  --light_pink: #ffe2e2;
+  --dark_pink: #ffc7c7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: 'suite';
@@ -14,4 +27,47 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+ul,
+ol {
+  padding-left: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  background-color: transparent;
+  border: 0;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+button,
+input,
+select,
+textarea {
+  border: 0;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
