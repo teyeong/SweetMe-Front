@@ -1,9 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useState } from 'react';
 
 import logo from '../../assets/logo.svg';
+import defaultProfile from '../../assets/defaultProfile.jpg';
 
 const Header = () => {
+  // 로그인 여부 확인
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navigate = useNavigate();
   // 카카오 로그인 여부 파악 함수 작성 예정
 
@@ -27,8 +32,16 @@ const Header = () => {
         <div className="div"></div>
         <Logo src={logo} onClick={handleLogoClick} />
         <BtnContainer>
-          <Btn onClick={handleCreateClick}>모집하기</Btn>
-          <Btn onClick={handleLoginClick}>로그인</Btn>
+          {isLoggedIn ? (
+            <Profile href="/mypage">
+              {/* <Img /> 사용자 프로필 이미지 src로 받아서 사용 */}
+            </Profile>
+          ) : (
+            <>
+              <Btn onClick={handleCreateClick}>모집하기</Btn>
+              <Btn onClick={handleLoginClick}>로그인</Btn>
+            </>
+          )}
         </BtnContainer>
       </Div>
     </>
@@ -59,11 +72,43 @@ const Logo = styled.img`
   cursor: pointer;
 `;
 
+const Img = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const Profile = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-image: url(${defaultProfile});
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  position: absolute;
+  right: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  transition: opacity 200ms ease-in-out;
+
+  &:hover {
+    opacity: 0.6;
+  }
+`;
+
 const BtnContainer = styled.div`
   width: 180px;
   display: flex;
   justify-content: space-between;
   margin-right: 15px;
+  position: relative;
   @media (max-width: 800px) {
     margin: 0;
     width: 150px;
