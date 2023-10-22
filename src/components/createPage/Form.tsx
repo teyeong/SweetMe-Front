@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 
-import OptionMenu from './OptionMenu';
 import Dropdown from './Dropdown';
+import { Border } from 'components/_common/pageLayout';
 
 const Form = () => {
   return (
@@ -79,17 +79,12 @@ const Title = styled.input`
   border-bottom: 1px #d9d9d9 solid;
   font-size: 25px;
   text-align: center;
+  margin-top: 30px;
   margin-bottom: 80px;
 
   &:focus {
     border-color: pink;
   }
-`;
-
-const Border = styled.div`
-  height: 0;
-  width: 100%;
-  border-bottom: 1px #d9d9d9 solid;
 `;
 
 const MainWrapper = styled.div`
@@ -114,7 +109,7 @@ const InputList = styled.ol``;
 const InputListItem = styled.li`
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   font-size: 18px;
 
   &.last {
@@ -188,9 +183,10 @@ const Footer = styled.div`
 `;
 
 const CompleteButton = styled.button`
-  padding: 8px 28px;
+  width: 100px;
+  height: 35px;
   border: 1px #d9d9d9 solid;
-  border-radius: 20px;
+  border-radius: 25px;
   background-color: #fff;
   font-size: 16px;
   cursor: pointer;
