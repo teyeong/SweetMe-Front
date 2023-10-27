@@ -8,7 +8,10 @@
     "category": "개발-백엔드",
     "userLiked": false,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "구글폼",
+    "meeting": "대면",
+    "text": "안녕하세요 JPA 스터디를 함께할 팀원을 모집합니다.3달 동안 진행할 예정이고 매주 금요일마다 스터디 인증을 하려고 합니다.왕초보 환영합니다."
   },
   {
     "postId": 2,
@@ -19,7 +22,10 @@
     "category": "일상-기상",
     "userLiked": true,
     "ads": false,
-    "recruitment": true
+    "recruitment": true,
+    "contact": "구글폼",
+    "meeting": "대면",
+    "text": "안녕하세요! 매일 아침 일찍 일어나는 습관을 들이기 위한 스터디를 함께 할 팀원들을 모집합니다.매일 아침 7시에 사진으로 인증하는 형식으로 진행할 생각입니다."
   },
   {
     "postId": 3,
@@ -30,7 +36,9 @@
     "category": "어학-영어",
     "userLiked": false,
     "ads": false,
-    "recruitment": true
+    "recruitment": true,
+    "contact": "오픈채팅",
+    "meeting": "대면"
   },
   {
     "postId": 4,
@@ -41,7 +49,9 @@
     "category": "개발-프론트엔드",
     "userLiked": true,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "이메일",
+    "meeting": "비대면"
   },
   {
     "postId": 5,
@@ -52,7 +62,9 @@
     "category": "일상-기타",
     "userLiked": false,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "네이버 폼",
+    "meeting": "비대면"
   },
   {
     "postId": 6,
@@ -63,7 +75,9 @@
     "category": "일상-기타",
     "userLiked": true,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "이메일",
+    "meeting": "대면"
   },
   {
     "postId": 7,
@@ -74,7 +88,9 @@
     "category": "개발-게임",
     "userLiked": false,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "오픈채팅",
+    "meeting": "대면"
   },
   {
     "postId": 8,
@@ -85,7 +101,9 @@
     "category": "개발-인공지능",
     "userLiked": true,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "구글폼",
+    "meeting": "비대면"
   },
   {
     "postId": 9,
@@ -96,7 +114,9 @@
     "category": "어학-중국어",
     "userLiked": false,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "네이버 폼",
+    "meeting": "대면"
   },
   {
     "postId": 10,
@@ -107,6 +127,8 @@
     "category": "일상-시사",
     "userLiked": true,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "구글폼",
+    "meeting": "비대면"
   }
 ]
