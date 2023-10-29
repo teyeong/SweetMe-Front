@@ -10,7 +10,6 @@ const StudyDetail = ({ study }: { study: Study }) => {
   const navigate = useNavigate();
 
   const [tagImg, settagImg] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
 
   const [dday, setDday] = useState<number | null>(null);
 
@@ -40,15 +39,6 @@ const StudyDetail = ({ study }: { study: Study }) => {
     settagImg(categories[study.category]);
   }, [study.category]);
 
-  // 제목이 긴 경우 말줄임표 추가
-  useEffect(() => {
-    if (study.title.length > 25) {
-      setTitle(study.title.slice(0, 25) + '⋯');
-    } else {
-      setTitle(study.title);
-    }
-  }, [study.title]);
-
   const handleLikeClick = () => {
     // 좋아요 버튼 api 호출
   };
@@ -77,7 +67,7 @@ const StudyDetail = ({ study }: { study: Study }) => {
           <p>👀{study.view}</p>
         </div>
       </FirstDiv>
-      <TitleText>{title}</TitleText>
+      <TitleText>{study.title}</TitleText>
       <LastDiv>
         <Tag src={tagImg}></Tag>
         {study.userLiked ? (
@@ -156,6 +146,11 @@ const DdayText = styled.p`
 const TitleText = styled.p`
   font-size: 24px;
   margin: auto 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 const LastDiv = styled.div`
@@ -180,8 +175,6 @@ const LikeBtn = styled(IoMdHeart)`
 `;
 
 const EmptyLikeBtn = styled.div`
-  //display: flex;
-  //align-items: center;
   margin: 0;
   display: block;
   font-size: 30px;

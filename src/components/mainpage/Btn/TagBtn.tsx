@@ -59,11 +59,13 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   width: 73vw;
+  @media (max-width: 800px) {
+    width: calc(100% - 20px);
+  }
   .div {
     display: flex;
     @media (max-width: 800px) {
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
     }
   }
 `;
@@ -77,13 +79,14 @@ const Btn = styled.button`
   width: 150px;
   height: 55px;
   background-color: #f6f6f6;
+  color: black;
   cursor: pointer;
   &.active {
     background-color: #ffe2e2;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   }
   @media (max-width: 800px) {
-    margin-bottom: 20px;
+    margin: 0 10px;
   }
 `;
 

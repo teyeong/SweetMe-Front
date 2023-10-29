@@ -21,9 +21,9 @@ const Header = () => {
     // 모달 추가 예정
   };
 
-  // 로고 클릭 시 새로고침
+  // 로고 클릭 시 메인페이지로 이동
   const handleLogoClick = () => {
-    window.location.reload();
+    navigate('/');
   };
 
   return (
@@ -70,6 +70,9 @@ const Div = styled.div`
 const Logo = styled.img`
   width: 250px;
   cursor: pointer;
+  @media (max-width: 800px) {
+    width: 160px;
+  }
 `;
 
 const Img = styled.img`
@@ -108,10 +111,9 @@ const BtnContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-right: 15px;
-  position: relative;
   @media (max-width: 800px) {
     margin: 0;
-    width: 150px;
+    width: 130px;
   }
 `;
 
