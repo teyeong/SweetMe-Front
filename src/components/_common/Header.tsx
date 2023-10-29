@@ -21,9 +21,9 @@ const Header = () => {
     // 모달 추가 예정
   };
 
-  // 로고 클릭 시 메인페이지로 이동
+  // 로고 클릭 시 새로고침
   const handleLogoClick = () => {
-    navigate('/');
+    window.location.reload();
   };
 
   return (
