@@ -94,6 +94,10 @@ const Div = styled.div`
   margin: 15px;
   cursor: pointer;
   position: relative;
+  background-color: white;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 300px;
 `;
 
 const EndDiv = styled.div`
