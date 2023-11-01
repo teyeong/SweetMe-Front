@@ -18,3 +18,7 @@ export type TagListProps = {
   tags: string[];
   onTagClick: (tag: string) => void;
 };
+
+export type ModalProps = {
+  setIsModalOpen: (isModalOpen: boolean) => void;
+};
