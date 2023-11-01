@@ -8,6 +8,9 @@ export type Study = {
   userLiked: boolean;
   ads: boolean;
   recruitment: boolean;
+  contact: string;
+  meeting: string;
+  text?: string;
 };
 
 export type StatusBtn = {

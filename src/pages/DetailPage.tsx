@@ -1,7 +1,32 @@
-import React from 'react';
+import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+
+import Header from 'components/_common/Header';
+import { Container, Body, Border } from 'components/_common/pageLayout';
+import DetailHeader from 'components/detailpage/DetailHeader';
+import DetailBox from 'components/detailpage/DetailBox';
+import DetailText from 'components/detailpage/DetailText';
+import data from '../components/mainpage/dummy-data.json';
+import BtnGroup from 'components/detailpage/BtnGroup';
 
 const DetailPage = () => {
-  return <div>스터디 상세 페이지</div>;
+  const { postId } = useParams();
+  const postIdAsNumber = postId ? parseInt(postId) : 0;
+  //console.log(data[postIdAsNumber - 1]);
+
+  return (
+    <Container>
+      <Header />
+      <DetailHeader study={data[postIdAsNumber - 1]} />
+      <Border />
+      <Body>
+        <DetailBox study={data[postIdAsNumber - 1]} />
+      </Body>
+      <Border />
+      <DetailText study={data[postIdAsNumber - 1]} />
+      <BtnGroup />
+    </Container>
+  );
 };
 
 export default DetailPage;

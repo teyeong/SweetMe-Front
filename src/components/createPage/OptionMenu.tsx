@@ -32,7 +32,7 @@ const OptionMenu = ({ type }: { type: 'category' | 'contact' | 'meeting' }) => {
               일상
             </Tab>
           </TabOption>
-          <Border></Border>
+          <Border />
           <CategoryTabListWrapper>
             {selectedTab === 'dev' && <TagList type="dev" />}
             {selectedTab === 'lang' && <TagList type="lang" />}
