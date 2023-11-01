@@ -36,11 +36,10 @@ const Btn = styled.button`
   font-size: 18px;
   font-family: 'suite';
   width: max-content;
-  height: 50px;
   background-color: white;
-  //text-align: right;
+  color: black;
   padding: 0;
-  margin: 0 15px;
+  margin: 10px 15px;
   cursor: pointer;
   &.active {
     font-weight: 700;

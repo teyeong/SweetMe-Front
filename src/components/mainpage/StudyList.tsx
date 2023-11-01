@@ -44,6 +44,9 @@ const Div = styled.div`
     height: 1px;
     background-color: black;
     margin: 15px 0;
+    @media (max-width: 800px) {
+      margin-top: 0;
+    }
   }
 `;
 
@@ -51,19 +54,25 @@ const BtnDiv = styled.div`
   display: flex;
   justify-content: space-between;
   width: 73vw;
-  @media (max-width: 900px) {
+  @media (max-width: 800px) {
     flex-direction: column;
     justify-content: center;
+    width: calc(100% - 10px);
   }
 `;
 
 const ItemDiv = styled.div`
-  width: 80%;
+  width: 1320px;
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  @media (max-width: 1000px) {
-    width: calc(100% - 10px);
+  @media (max-width: 1320px) {
+    width: 990px;
+  }
+  @media (max-width: 990px) {
+    width: 660px;
+  }
+  @media (max-width: 660px) {
+    width: 330px;
   }
 `;
 
