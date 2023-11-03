@@ -3,10 +3,18 @@ import { useState } from 'react';
 
 import OptionMenu from './OptionMenu';
 
-const Dropdown = ({ type }: { type: 'category' | 'contact' | 'meeting' }) => {
+import { categories } from 'components/_common/tags';
+
+type DropdownProps = {
+  type?: string;
+  selectedTag?: string;
+};
+
+const Dropdown = ({ type, selectedTag }: DropdownProps) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isMeetingOpen, setIsMeetingOpen] = useState(false);
+  const [isTagSelected, setIsTagSelected] = useState(true);
 
   const handleDropdownClick = (type: string) => {
     if (type === 'category') {
@@ -22,7 +30,7 @@ const Dropdown = ({ type }: { type: 'category' | 'contact' | 'meeting' }) => {
     <DropdownWrapper>
       <DropdownSelect
         type="button"
-        onClick={() => handleDropdownClick(type)}
+        onClick={() => handleDropdownClick(type as string)}
         className={
           type === 'category'
             ? isCategoryOpen
@@ -77,3 +85,20 @@ const DropdownSelect = styled.button`
     color: #948e8e;
   }
 `;
+
+// const SelectedTagWrapper = styled.div`
+//   width: 100px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   /* overflow: hidden; */
+//   margin-right: 5px;
+//   transition: opacity 100ms ease-in-out;
+//   cursor: pointer;
+// `;
+
+// const SelectedTag = styled.img`
+//   width: 100%;
+//   height: 100%;
+//   object-fit: cover;
+// `;
