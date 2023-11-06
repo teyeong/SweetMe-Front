@@ -4,10 +4,12 @@ import data from './ad-dummy-data.json';
 import StudyDetail from './StudyDetail';
 
 const AdList = () => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null); // slides를 담는 컨테이너를 저장하는 ref
+  const intervalRef = useRef<NodeJS.Timeout | null>(null); // interval을 저장하는 ref
   const [current, setCurrent] = useState(1); // 현재 위치 상태
   const [translateX, setTranslateX] = useState(0); // X축 이동으로 위치
   const [itemCnt, setItemCnt] = useState(4); // 아이템 개수
+  const [isLoading, setIsLoading] = useState(false); // 버튼이 클릭된 상태인지 확인
 
   // 화면 너비에 따른 아이템 개수 설정 useEffect
   useEffect(() => {
@@ -56,15 +58,37 @@ const AdList = () => {
     }
   }, [itemCnt]);
 
+  // isLoading을 false로 바꾸는 함수
+  const handleTransitionEnd = () => setIsLoading(false);
+
+  // transition이 끝났을 때 isLoading을 false로 바꿈
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.addEventListener(
+        'transitionend',
+        handleTransitionEnd,
+      );
+      return () => {
+        containerRef.current?.removeEventListener(
+          'transitionend',
+          handleTransitionEnd,
+        );
+      };
+    }
+  }, []);
+
   // 버튼 클릭 핸들러
   const actionHandler = (mode: string) => {
-    console.log(itemCnt);
     if (data.length <= 3) {
       // 길이가 3보다 작거나 같은 경우 버튼 클릭 금지
       return;
     }
     if (containerRef.current) {
       containerRef.current.style.transitionDuration = '1s';
+
+      // 현재 버튼 눌린 상태임을 표시
+      setIsLoading(true);
+
       // 왼쪽 버튼 클릭
       if (mode === 'prev') {
         if (current <= 1) {
@@ -119,11 +143,38 @@ const AdList = () => {
     };
   }, [current]);
 
+  // 3초마다 자동으로 넘어감
+  useEffect(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setInterval(() => actionHandler('next'), 3000);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [actionHandler]);
+
   return (
     <Div>
       <BtnDiv>
-        <LeftBtn onClick={() => actionHandler('prev')} />
-        <RightBtn onClick={() => actionHandler('next')} />
+        <LeftBtn
+          onClick={() => {
+            // trasition이 끝날 때까지 버튼 클릭 금지
+            if (!isLoading) {
+              actionHandler('prev');
+            }
+          }}
+        />
+        <RightBtn
+          onClick={() => {
+            // trasition이 끝날 때까지 버튼 클릭 금지
+            if (!isLoading) {
+              actionHandler('next');
+            }
+          }}
+        />
       </BtnDiv>
       <ItemDiv>
         <div
