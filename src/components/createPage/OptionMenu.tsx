@@ -1,14 +1,17 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import TagList from './TagList';
 
-const OptionMenu = ({ type }: { type: 'category' | 'contact' | 'meeting' }) => {
+interface OptionMenuProp {
+  type: 'category' | 'contact' | 'meeting';
+}
+const OptionMenu = (prop: OptionMenuProp) => {
   const [selectedTab, setSelectedTab] = useState('dev');
 
   let content;
 
-  switch (type) {
+  switch (prop.type) {
     case 'category':
       content = (
         <CategoryWrapper>
@@ -53,7 +56,7 @@ const OptionMenu = ({ type }: { type: 'category' | 'contact' | 'meeting' }) => {
   }
 
   return (
-    <Wrapper className={`${type === 'contact' ? 'box' : ''}`}>
+    <Wrapper className={`${prop.type === 'contact' ? 'box' : ''}`}>
       {content}
     </Wrapper>
   );
