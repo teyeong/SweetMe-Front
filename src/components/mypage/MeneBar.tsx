@@ -35,6 +35,7 @@ const MenuBar = () => {
     {
       menuTitle: (
         <ItemDiv
+          key="0"
           onClick={() => handleMenuClick(0)}
           className={`${activeIndex === 0 && 'active'}`}
         >
@@ -49,6 +50,7 @@ const MenuBar = () => {
     {
       menuTitle: (
         <ItemDiv
+          key="1"
           onClick={() => handleMenuClick(1)}
           className={`${activeIndex === 1 && 'active'}`}
         >
@@ -82,7 +84,7 @@ const MenuBar = () => {
           </ItemDiv>
         </MenuDiv>
         <UserDiv>
-          <img src={defaultProfile} />
+          <div>{/* <Img /> 사용자 프로필 이미지 src로 받아서 사용 */}</div>
           <p>username</p>
         </UserDiv>
       </Div>
@@ -144,16 +146,26 @@ const UserDiv = styled.div`
   bottom: 25px;
   padding-left: 26px;
   cursor: default;
-  img {
+  div {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
+    background-image: url(${defaultProfile});
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
   p {
     margin-left: 24px;
     font-size: 24px;
   }
+`;
+
+const Img = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 export default MenuBar;
