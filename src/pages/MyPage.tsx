@@ -1,7 +1,13 @@
-import React from 'react';
+import Header from 'components/_common/Header';
+import MenuBar from 'components/mypage/MeneBar';
 
 const MyPage = () => {
-  return <div>마이 페이지</div>;
+  return (
+    <>
+      <Header />
+      <MenuBar />
+    </>
+  );
 };
 
 export default MyPage;

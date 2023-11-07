@@ -94,8 +94,8 @@ const meeting = {
 } as TagObject;
 
 const recruitment = {
-  True: open,
-  False: closed,
+  False: open,
+  True: closed,
 } as TagObject;
 
 export { categories, dev, language, daily, contact, meeting, recruitment };

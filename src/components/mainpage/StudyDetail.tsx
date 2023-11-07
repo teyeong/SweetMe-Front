@@ -9,7 +9,7 @@ import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 const StudyDetail = ({ study }: { study: Study }) => {
   const navigate = useNavigate();
 
-  const [tagImg, settagImg] = useState<string>('');
+  const [tagImg, setTagImg] = useState<string>('');
 
   const [dday, setDday] = useState<number | null>(null);
 
@@ -36,7 +36,7 @@ const StudyDetail = ({ study }: { study: Study }) => {
 
   // 태그 이미지 설정
   useEffect(() => {
-    settagImg(categories[study.category]);
+    setTagImg(categories[study.category]);
   }, [study.category]);
 
   const handleLikeClick = () => {
@@ -44,7 +44,7 @@ const StudyDetail = ({ study }: { study: Study }) => {
   };
 
   return (
-    <Div onClick={handleStudyClick} className={study.recruitment ? 'end' : ''}>
+    <Div onClick={handleStudyClick}>
       <EndDiv className={study.recruitment ? 'end' : ''}>
         <div>
           모집

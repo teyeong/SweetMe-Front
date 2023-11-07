@@ -4,10 +4,14 @@ import { useState } from 'react';
 
 import logo from '../../assets/logo.svg';
 import defaultProfile from '../../assets/defaultProfile.jpg';
+import LoginModal from './LoginModal';
 
 const Header = () => {
   // 로그인 여부 확인
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 로그인 모달 열림 유무
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
   // 카카오 로그인 여부 파악 함수 작성 예정
@@ -18,12 +22,13 @@ const Header = () => {
   };
 
   const handleLoginClick = () => {
-    // 모달 추가 예정
+    // 로그인 모달
+    setIsModalOpen(true);
   };
 
   // 로고 클릭 시 메인페이지로 이동
   const handleLogoClick = () => {
-    navigate('/');
+    window.location.href = '/';
   };
 
   return (
@@ -33,9 +38,12 @@ const Header = () => {
         <Logo src={logo} onClick={handleLogoClick} />
         <BtnContainer>
           {isLoggedIn ? (
-            <Profile href="/mypage">
-              {/* <Img /> 사용자 프로필 이미지 src로 받아서 사용 */}
-            </Profile>
+            <>
+              <Btn onClick={handleCreateClick}>모집하기</Btn>
+              <Profile href="/mypage">
+                {/* <Img /> 사용자 프로필 이미지 src로 받아서 사용 */}
+              </Profile>
+            </>
           ) : (
             <>
               <Btn onClick={handleCreateClick}>모집하기</Btn>
@@ -44,6 +52,7 @@ const Header = () => {
           )}
         </BtnContainer>
       </Div>
+      {isModalOpen && <LoginModal setIsModalOpen={setIsModalOpen} />}
     </>
   );
 };
@@ -94,11 +103,6 @@ const Profile = styled.a`
   background-repeat: no-repeat;
   background-size: contain;
 
-  position: absolute;
-  right: 0;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%);
   transition: opacity 200ms ease-in-out;
 
   &:hover {

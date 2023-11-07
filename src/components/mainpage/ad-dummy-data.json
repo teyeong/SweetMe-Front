@@ -8,7 +8,10 @@
     "category": "BACKEND",
     "userLiked": false,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "GOOGLE_FORM_FORM",
+    "meeting": "OFFLINE",
+    "text": "안녕하세요 JPA 스터디를 함께할 팀원을 모집합니다.3달 동안 진행할 예정이고 매주 금요일마다 스터디 인증을 하려고 합니다.왕초보 환영합니다."
   },
   {
     "postId": 4,
@@ -19,7 +22,9 @@
     "category": "FRONTEND",
     "userLiked": true,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "EMAIL",
+    "meeting": "ONLINE"
   },
   {
     "postId": 5,
@@ -30,7 +35,9 @@
     "category": "DAILY_ETC",
     "userLiked": false,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "NAVER_FORM",
+    "meeting": "ONLINE"
   },
   {
     "postId": 6,
@@ -41,7 +48,9 @@
     "category": "DAILY_ETC",
     "userLiked": true,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "EMAIL",
+    "meeting": "OFFLINE"
   },
   {
     "postId": 7,
@@ -52,7 +61,9 @@
     "category": "GAME",
     "userLiked": false,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "KAKAO_OPENCHAT",
+    "meeting": "OFFLINE"
   },
   {
     "postId": 8,
@@ -63,7 +74,9 @@
     "category": "AI",
     "userLiked": true,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "GOOGLE_FORM",
+    "meeting": "ONLINE"
   },
   {
     "postId": 9,
@@ -74,7 +87,9 @@
     "category": "CHINESE",
     "userLiked": false,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "NAVER_FORM",
+    "meeting": "OFFLINE"
   },
   {
     "postId": 10,
@@ -85,6 +100,8 @@
     "category": "ISSUE",
     "userLiked": true,
     "ads": true,
-    "recruitment": false
+    "recruitment": false,
+    "contact": "GOOGLE_FORM",
+    "meeting": "ONLINE"
   }
 ]
