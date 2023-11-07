@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import data from './ad-dummy-data.json';
 import StudyDetail from './StudyDetail';
+import Loader from '../_common/Loader';
 
 const AdList = () => {
   const containerRef = useRef<HTMLDivElement | null>(null); // slides를 담는 컨테이너를 저장하는 ref
@@ -9,7 +10,8 @@ const AdList = () => {
   const [current, setCurrent] = useState(1); // 현재 위치 상태
   const [translateX, setTranslateX] = useState(0); // X축 이동으로 위치
   const [itemCnt, setItemCnt] = useState(4); // 아이템 개수
-  const [isLoading, setIsLoading] = useState(false); // 버튼이 클릭된 상태인지 확인
+  const [isTransiting, setIsTransiting] = useState(false); // 버튼이 클릭된 상태인지 확인
+  const [isLoading, setIsLoading] = useState<boolean>(false); // 아이템 가져오기 로딩
 
   // 화면 너비에 따른 아이템 개수 설정 useEffect
   useEffect(() => {
@@ -58,10 +60,10 @@ const AdList = () => {
     }
   }, [itemCnt]);
 
-  // isLoading을 false로 바꾸는 함수
-  const handleTransitionEnd = () => setIsLoading(false);
+  // isTransiting을 false로 바꾸는 함수
+  const handleTransitionEnd = () => setIsTransiting(false);
 
-  // transition이 끝났을 때 isLoading을 false로 바꿈
+  // transition이 끝났을 때 isTransiting을 false로 바꿈
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.addEventListener(
@@ -87,7 +89,7 @@ const AdList = () => {
       containerRef.current.style.transitionDuration = '1s';
 
       // 현재 버튼 눌린 상태임을 표시
-      setIsLoading(true);
+      setIsTransiting(true);
 
       // 왼쪽 버튼 클릭
       if (mode === 'prev') {
@@ -162,7 +164,7 @@ const AdList = () => {
         <LeftBtn
           onClick={() => {
             // trasition이 끝날 때까지 버튼 클릭 금지
-            if (!isLoading) {
+            if (!isTransiting) {
               actionHandler('prev');
             }
           }}
@@ -170,22 +172,26 @@ const AdList = () => {
         <RightBtn
           onClick={() => {
             // trasition이 끝날 때까지 버튼 클릭 금지
-            if (!isLoading) {
+            if (!isTransiting) {
               actionHandler('next');
             }
           }}
         />
       </BtnDiv>
-      <ItemDiv>
-        <div
-          ref={containerRef}
-          style={{
-            transform: `translateX(${-translateX}px)`,
-          }}
-        >
-          {slides}
-        </div>
-      </ItemDiv>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <ItemDiv>
+          <div
+            ref={containerRef}
+            style={{
+              transform: `translateX(${-translateX}px)`,
+            }}
+          >
+            {slides}
+          </div>
+        </ItemDiv>
+      )}
     </Div>
   );
 };
