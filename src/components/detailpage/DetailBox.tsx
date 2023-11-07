@@ -117,7 +117,7 @@ const Title = styled.span`
 `;
 
 const Info = styled.span`
-  font-weight: 500;
+  font-weight: bold;
 `;
 
 const TagWrapper = styled.div`

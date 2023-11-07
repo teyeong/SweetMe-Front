@@ -23,10 +23,18 @@ const DetailPage = () => {
         <DetailBox study={data[postIdAsNumber - 1]} />
       </Body>
       <Border />
-      <DetailText study={data[postIdAsNumber - 1]} />
-      <BtnGroup />
+      <TextWrapper>
+        <DetailText study={data[postIdAsNumber - 1]} />
+        {/* 사용자가 작성한 글일때만 보이게 하기 */}
+        <BtnGroup />
+      </TextWrapper>
     </Container>
   );
 };
 
 export default DetailPage;
+
+const TextWrapper = styled.div`
+  width: 100%;
+  position: relative;
+`;

@@ -4,41 +4,85 @@ import { useState } from 'react';
 import Dropdown from './Dropdown';
 import { Border } from 'components/_common/pageLayout';
 
+interface SubmitData {
+  title: string;
+}
+
+interface Deadline {
+  year: number;
+  month: number;
+  day: number;
+}
+
 const Form = () => {
+  const [title, setTitle] = useState('');
+  const [people, setPeople] = useState(0);
+  const [category, setCategory] = useState('');
+  const [meeting, setMeeting] = useState('');
+  const [contact, setContact] = useState('');
+
+  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const onChangePeople = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const numPeople = parseInt(e.target.value);
+    setPeople(numPeople);
+  };
+
+  const handleSubmit = () => {
+    return;
+  };
+
   return (
     <Wrapper>
-      <Title type="text" placeholder="제목을 입력하세요"></Title>
+      <Title
+        type="text"
+        placeholder="제목을 입력하세요"
+        value={title}
+        onChange={onChangeTitle}
+      />
       <Border />
       <MainWrapper>
         <MainLeft>
           <InputList>
             <InputListItem>
               <InputListTitle className="default">카테고리</InputListTitle>
-              <Dropdown type="category" />
+              <Dropdown type="category" setCategory={setCategory} />
             </InputListItem>
             <InputListItem>
               <InputListTitle className="default">모집 마감</InputListTitle>
               <DateSelect>
-                <DateInput type="number" className="year " />년
-                <DateInput type="number" className="month " />월
-                <DateInput type="number" className="day " />일
+                <DateInput type="number" className="year" />
+                <p>년</p>
+                <DateInput type="number" className="month" />
+                <p>월</p>
+                <DateInput type="number" className="day" />
+                <p>일</p>
               </DateSelect>
             </InputListItem>
             <InputListItem>
               <InputListTitle className="short">스터디 기간</InputListTitle>
               <DateSelect>
-                <DateInput type="number" className="year start" />년
-                <DateInput type="number" className="month start" />월
-                <DateInput type="number" className="day start" />일
-                <span> ~ </span>
-                <DateInput type="number" className="year end" />년
-                <DateInput type="number" className="month end" />월
-                <DateInput type="number" className="day end" />일
+                <DateInput type="number" className="year start" />
+                <p>년</p>
+                <DateInput type="number" className="month start" />
+                <p>월</p>
+                <DateInput type="number" className="day start" />
+                <p>일</p>
+                <p> ~ </p>
+                <DateInput type="number" className="year end" />
+                <p>년</p>
+                <DateInput type="number" className="month end" />
+                <p>월</p>
+                <DateInput type="number" className="day end" />
+                <p>일</p>
               </DateSelect>
             </InputListItem>
             <InputListItem className="last">
               <InputListTitle className="default">모집 인원</InputListTitle>
-              <NumInput type="number" />명
+              <NumInput type="number" onChange={onChangePeople} />
+              <p>명</p>
             </InputListItem>
           </InputList>
         </MainLeft>
@@ -57,9 +101,11 @@ const Form = () => {
         </MainRight>
       </MainWrapper>
       <Border />
-      <TextInput placeholder="내용을 입력하세요"></TextInput>
+      <TextInput placeholder="내용을 입력하세요" />
       <Footer>
-        <CompleteButton type="submit">완료</CompleteButton>
+        <CompleteButton type="submit" onClick={handleSubmit}>
+          완료
+        </CompleteButton>
       </Footer>
     </Wrapper>
   );
@@ -133,30 +179,34 @@ const DateSelect = styled.div`
   width: 100%;
   display: flex;
   justify-content: start;
+
+  p {
+    margin-right: 8px;
+  }
 `;
 
 const DateInput = styled.input`
   background-color: var(--gray);
   border-radius: 5px;
-  height: 24px;
+  height: 26px;
   font-size: 18px;
   text-align: center;
 
   &.year {
-    width: 50px;
+    width: 60px;
   }
 
   &.month,
   &.day {
-    width: 30px;
+    width: 40px;
   }
 `;
 
 const NumInput = styled.input`
   background-color: var(--gray);
   border-radius: 5px;
-  height: 24px;
-  width: 30px;
+  height: 26px;
+  width: 40px;
   font-size: 18px;
   text-align: center;
 `;
@@ -184,10 +234,10 @@ const Footer = styled.div`
 
 const CompleteButton = styled.button`
   width: 100px;
-  height: 35px;
-  border: 1px #d9d9d9 solid;
-  border-radius: 25px;
-  background-color: #fff;
+  height: 38px;
+  border: 2px solid var(--navy);
+  border-radius: 20px;
+  background-color: white;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 200ms ease-in-out color 200ms ease-in-out;

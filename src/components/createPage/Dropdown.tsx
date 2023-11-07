@@ -5,12 +5,13 @@ import OptionMenu from './OptionMenu';
 
 import { categories } from 'components/_common/tags';
 
-type DropdownProps = {
+interface DropdownProps {
   type?: string;
   selectedTag?: string;
-};
+  setCategory?: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const Dropdown = ({ type, selectedTag }: DropdownProps) => {
+const Dropdown = (props: DropdownProps) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isMeetingOpen, setIsMeetingOpen] = useState(false);
@@ -30,13 +31,13 @@ const Dropdown = ({ type, selectedTag }: DropdownProps) => {
     <DropdownWrapper>
       <DropdownSelect
         type="button"
-        onClick={() => handleDropdownClick(type as string)}
+        onClick={() => handleDropdownClick(props.type as string)}
         className={
-          type === 'category'
+          props.type === 'category'
             ? isCategoryOpen
               ? 'isOpen'
               : ''
-            : type === 'contact'
+            : props.type === 'contact'
             ? isContactOpen
               ? 'isOpen'
               : ''
@@ -48,9 +49,15 @@ const Dropdown = ({ type, selectedTag }: DropdownProps) => {
         <i className="fas fa-chevron-down arrow-down" />
         선택
       </DropdownSelect>
-      {type === 'category' && isCategoryOpen && <OptionMenu type={type} />}
-      {type === 'contact' && isContactOpen && <OptionMenu type={type} />}
-      {type === 'meeting' && isMeetingOpen && <OptionMenu type={type} />}
+      {props.type === 'category' && isCategoryOpen && (
+        <OptionMenu type={props.type} />
+      )}
+      {props.type === 'contact' && isContactOpen && (
+        <OptionMenu type={props.type} />
+      )}
+      {props.type === 'meeting' && isMeetingOpen && (
+        <OptionMenu type={props.type} />
+      )}
     </DropdownWrapper>
   );
 };
