@@ -1,37 +1,131 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import Dropdown from './Dropdown';
 import { Border } from 'components/_common/pageLayout';
+import { TagContext, TagProvider } from './TagProvider';
 
+// POST data 형식
 interface SubmitData {
   title: string;
 }
 
-interface Deadline {
-  year: number;
-  month: number;
-  day: number;
-}
+const initialDate = {
+  year: 0,
+  month: 0,
+  day: 0,
+};
 
 const Form = () => {
+  const { categoryTag, meetingTag, contactTag } = useContext(TagContext);
   const [title, setTitle] = useState('');
   const [people, setPeople] = useState(0);
-  const [category, setCategory] = useState('');
-  const [meeting, setMeeting] = useState('');
-  const [contact, setContact] = useState('');
+  const [deadline, setDeadline] = useState(initialDate);
+  const [startDate, setStartDate] = useState(initialDate);
+  const [endDate, setEndDate] = useState(initialDate);
+  const [formattedDeadline, setFormattedDeadline] = useState('');
+  const [formattedStartDate, setFormattedStartDate] = useState('');
+  const [formattedEndDate, setFormattedEndDate] = useState('');
+  const [content, setContent] = useState('');
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
   const onChangePeople = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const numPeople = parseInt(e.target.value);
-    setPeople(numPeople);
+    const peopleAsNum = parseInt(e.target.value);
+    setPeople(peopleAsNum);
+  };
+
+  // 날짜 저장 공통 함수
+  const handleDateChange = (
+    className: string,
+    value: string,
+    setDateFunc: any,
+  ) => {
+    setDateFunc((prevState: []) => ({
+      ...prevState,
+      [className]: parseInt(value),
+    }));
+  };
+
+  // 모집 마감일 저장
+  const onDeadlineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { className, value } = e.target;
+    if (className.includes('year')) {
+      handleDateChange('year', value, setDeadline);
+    } else if (className.includes('month')) {
+      handleDateChange('month', value, setDeadline);
+    } else if (className.includes('day')) {
+      handleDateChange('day', value, setDeadline);
+    }
+  };
+
+  // 시작 날짜 저장
+  const onStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { className, value } = e.target;
+    if (className.includes('year')) {
+      handleDateChange('year', value, setStartDate);
+    } else if (className.includes('month')) {
+      handleDateChange('month', value, setStartDate);
+    } else if (className.includes('day')) {
+      handleDateChange('day', value, setStartDate);
+    }
+  };
+
+  // 끝 날짜 저장
+  const onEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { className, value } = e.target;
+    if (className.includes('year')) {
+      handleDateChange('year', value, setEndDate);
+    } else if (className.includes('month')) {
+      handleDateChange('month', value, setEndDate);
+    } else if (className.includes('day')) {
+      handleDateChange('day', value, setEndDate);
+    }
+  };
+
+  // 날짜 형식 변환
+  const formatDate = (year: number, month: number, day: number) => {
+    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(
+      2,
+      '0',
+    )} 00:00:00`;
+  };
+  useEffect(() => {
+    const formattedDeadline = formatDate(
+      deadline.year,
+      deadline.month,
+      deadline.day,
+    );
+    const formattedStartDate = formatDate(
+      startDate.year,
+      startDate.month,
+      startDate.day,
+    );
+    const formattedEndDate = formatDate(
+      endDate.year,
+      endDate.month,
+      endDate.day,
+    );
+
+    setFormattedDeadline(formattedDeadline);
+    setFormattedStartDate(formattedStartDate);
+    setFormattedEndDate(formattedEndDate);
+  }, [deadline, startDate, endDate]);
+
+  // content 저장
+  const onChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
   };
 
   const handleSubmit = () => {
-    return;
+    console.log(people);
+    console.log(title);
+    console.log(formattedDeadline);
+    console.log(formattedStartDate);
+    console.log(formattedEndDate);
+    console.log(content);
   };
 
   return (
@@ -48,34 +142,70 @@ const Form = () => {
           <InputList>
             <InputListItem>
               <InputListTitle className="default">카테고리</InputListTitle>
-              <Dropdown type="category" setCategory={setCategory} />
+              <Dropdown type="category" />
             </InputListItem>
             <InputListItem>
               <InputListTitle className="default">모집 마감</InputListTitle>
               <DateSelect>
-                <DateInput type="number" className="year" />
+                <DateInput
+                  type="number"
+                  className="year"
+                  onChange={onDeadlineChange}
+                />
                 <p>년</p>
-                <DateInput type="number" className="month" />
+                <DateInput
+                  type="number"
+                  className="month"
+                  onChange={onDeadlineChange}
+                />
                 <p>월</p>
-                <DateInput type="number" className="day" />
+                <DateInput
+                  type="number"
+                  className="day"
+                  onChange={onDeadlineChange}
+                />
                 <p>일</p>
               </DateSelect>
             </InputListItem>
             <InputListItem>
               <InputListTitle className="short">스터디 기간</InputListTitle>
               <DateSelect>
-                <DateInput type="number" className="year start" />
+                <DateInput
+                  type="number"
+                  className="year start"
+                  onChange={onStartDateChange}
+                />
                 <p>년</p>
-                <DateInput type="number" className="month start" />
+                <DateInput
+                  type="number"
+                  className="month start"
+                  onChange={onStartDateChange}
+                />
                 <p>월</p>
-                <DateInput type="number" className="day start" />
+                <DateInput
+                  type="number"
+                  className="day start"
+                  onChange={onStartDateChange}
+                />
                 <p>일</p>
                 <p> ~ </p>
-                <DateInput type="number" className="year end" />
+                <DateInput
+                  type="number"
+                  className="year end"
+                  onChange={onEndDateChange}
+                />
                 <p>년</p>
-                <DateInput type="number" className="month end" />
+                <DateInput
+                  type="number"
+                  className="month end"
+                  onChange={onEndDateChange}
+                />
                 <p>월</p>
-                <DateInput type="number" className="day end" />
+                <DateInput
+                  type="number"
+                  className="day end"
+                  onChange={onEndDateChange}
+                />
                 <p>일</p>
               </DateSelect>
             </InputListItem>
@@ -101,7 +231,11 @@ const Form = () => {
         </MainRight>
       </MainWrapper>
       <Border />
-      <TextInput placeholder="내용을 입력하세요" />
+      <TextInput
+        placeholder="내용을 입력하세요"
+        onChange={onChangeContent}
+        wrap="hard"
+      />
       <Footer>
         <CompleteButton type="submit" onClick={handleSubmit}>
           완료
@@ -218,6 +352,7 @@ const TextInput = styled.textarea`
   font-size: 18px;
   text-align: left;
   position: relative;
+  resize: none;
 
   &:focus {
     outline: none;
