@@ -21,5 +21,5 @@ const Container = styled.div`
 
 const Text = styled.p`
   margin-bottom: 8px;
-  white-space: pre-line;
+  white-space: pre-wrap;
 `;

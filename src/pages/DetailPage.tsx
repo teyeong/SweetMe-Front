@@ -12,7 +12,7 @@ import BtnGroup from 'components/detailpage/BtnGroup';
 const DetailPage = () => {
   const { postId } = useParams();
   const postIdAsNumber = postId ? parseInt(postId) : 0;
-  //console.log(data[postIdAsNumber - 1]);
+  console.log(data[postIdAsNumber - 1]);
 
   return (
     <Container>
