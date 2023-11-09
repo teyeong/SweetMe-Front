@@ -5,6 +5,7 @@ import TagList from './TagList';
 
 interface OptionMenuProp {
   type: 'category' | 'contact' | 'meeting';
+  setCategory?: React.Dispatch<React.SetStateAction<string>>;
 }
 const OptionMenu = (prop: OptionMenuProp) => {
   const [selectedTab, setSelectedTab] = useState('dev');
