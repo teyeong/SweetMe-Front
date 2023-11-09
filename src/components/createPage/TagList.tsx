@@ -1,14 +1,22 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import { dev, language, daily, contact, meeting } from '../_common/tags';
+import { TagContext } from './TagProvider';
 
 type TagOptionProps = {
   type: 'dev' | 'lang' | 'daily' | 'contact' | 'meeting';
 };
 
 const TagList = ({ type }: TagOptionProps) => {
-  const [selectedTag, setSelectedTag] = useState<string>('');
+  const {
+    categoryTag,
+    setCategoryTag,
+    meetingTag,
+    setMeetingTag,
+    contactTag,
+    setContactTag,
+  } = useContext(TagContext);
   let tagObject: { [key: string]: string } = {};
 
   switch (type) {
@@ -31,15 +39,20 @@ const TagList = ({ type }: TagOptionProps) => {
       break;
   }
 
-  const handleTagClick = (tag: string) => {
-    console.log(tag);
-    setSelectedTag(tag); // 선택한 태그를 상태에 저장
+  const handleTagClick = (type: string, tag: string) => {
+    if (type === 'contact') {
+      setContactTag(tag);
+    } else if (type === 'meeting') {
+      setMeetingTag(tag);
+    } else {
+      setCategoryTag(tag);
+    }
   };
 
   return (
     <>
       {Object.keys(tagObject).map((e, index) => (
-        <TagWrapper key={index} onClick={() => handleTagClick(e)}>
+        <TagWrapper key={index} onClick={() => handleTagClick(type, e)}>
           <Tag src={tagObject[e]} />
         </TagWrapper>
       ))}
