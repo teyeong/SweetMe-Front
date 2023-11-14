@@ -6,10 +6,10 @@ import { categories, contact, meeting } from 'components/_common/tags';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 
 const DetailBox = ({ study }: { study: Study }) => {
-  const [categoryTag, setCategoryTag] = useState<string>('');
-  const [contactTag, setContactTag] = useState<string>('');
-  const [meetingTag, setMeetingTag] = useState<string>('');
-  const [userLiked, setUserLiked] = useState<boolean>(false);
+  const [categoryTag, setCategoryTag] = useState('');
+  const [contactTag, setContactTag] = useState('');
+  const [meetingTag, setMeetingTag] = useState('');
+  const [userLiked, setUserLiked] = useState(false);
 
   // 카테고리 태그 설정
   useEffect(() => {
