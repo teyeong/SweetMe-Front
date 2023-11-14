@@ -77,7 +77,7 @@ const ArrowIcon = styled(AiOutlineArrowLeft)`
 `;
 
 const Title = styled.div`
-  font-size: 25px;
+  font-size: 30px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
