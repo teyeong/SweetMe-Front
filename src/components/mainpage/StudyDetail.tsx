@@ -17,27 +17,29 @@ const StudyDetail = ({ study }: { study: Study }) => {
   useEffect(() => {
     const today = new Date();
 
-    const parts = study.deadline.split('-');
-    const year = parseInt(parts[0]);
-    const month = parseInt(parts[1]) - 1;
-    const day = parseInt(parts[2]);
-    const targetDateObj = new Date(year, month, day);
+    const parts = study?.deadLine.split('-');
+    if (parts) {
+      const year = parseInt(parts[0]);
+      const month = parseInt(parts[1]) - 1;
+      const day = parseInt(parts[2]);
+      const targetDateObj = new Date(year, month, day);
 
-    const timeDiff = targetDateObj.getTime() - today.getTime();
-    const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      const timeDiff = targetDateObj.getTime() - today.getTime();
+      const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-    setDday(daysRemaining);
-  }, [study.deadline]);
+      setDday(daysRemaining);
+    }
+  }, [study?.deadLine]);
 
   // 스터디 상세 페이지로 이동
   const handleStudyClick = () => {
-    navigate(`/detail/${study.postId}`);
+    navigate(`/detail/${study?.postId}`);
   };
 
   // 태그 이미지 설정
   useEffect(() => {
-    setTagImg(categories[study.category]);
-  }, [study.category]);
+    setTagImg(categories[study?.category]);
+  }, [study?.category]);
 
   const handleLikeClick = () => {
     // 좋아요 버튼 api 호출
@@ -45,7 +47,7 @@ const StudyDetail = ({ study }: { study: Study }) => {
 
   return (
     <Div onClick={handleStudyClick}>
-      <EndDiv className={study.recruitment ? 'end' : ''}>
+      <EndDiv className={study?.recruitment ? 'end' : ''}>
         <div>
           모집
           <br />
@@ -63,14 +65,14 @@ const StudyDetail = ({ study }: { study: Study }) => {
           </DdayText>
         )}
         <div>
-          <p>♥{study.likes}</p>
-          <p>👀{study.view}</p>
+          <p>♥{study?.heartCount}</p>
+          <p>👀{study?.view}</p>
         </div>
       </FirstDiv>
-      <TitleText>{study.title}</TitleText>
+      <TitleText>{study?.title}</TitleText>
       <LastDiv>
         <Tag src={tagImg}></Tag>
-        {study.userLiked ? (
+        {study?.heart ? (
           <LikeBtn onClick={handleLikeClick} />
         ) : (
           <EmptyLikeBtn onClick={handleLikeClick}>

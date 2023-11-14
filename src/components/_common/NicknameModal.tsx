@@ -1,16 +1,17 @@
-import { useState } from 'react';
 import styled from 'styled-components';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { ModalProps } from '../_common/props';
+import { ModalProps } from './props';
+import { LoginAtom } from 'recoil/Login';
 import { UserInfoAtom } from 'recoil/User';
 import { patchNickname } from 'api/user';
 
-const NicknameEditModal = ({ setIsModalOpen }: ModalProps) => {
+const NicknameModal = ({ setIsModalOpen }: ModalProps) => {
+  const [login, setLogin] = useRecoilState(LoginAtom);
   const [userInfo, setUserInfo] = useRecoilState(UserInfoAtom);
-  const [nickname, setNickname] = useState(userInfo.nickname);
+  const [nickname, setNickname] = useState('');
 
-  // input 값 관리
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
@@ -22,15 +23,17 @@ const NicknameEditModal = ({ setIsModalOpen }: ModalProps) => {
     }
   };
 
-  // 저장 클릭 or 엔터 클릭
   const handleSubmit = async (e: React.FormEvent) => {
     // 새로고침 방지
     e.preventDefault();
 
     // 닉네임 patch api 호출
     const res = await patchNickname(nickname);
-    console.log('닉변', res);
     if (res?.status === 200) {
+      setLogin({
+        ...login,
+        isFirst: false,
+      });
       setUserInfo({
         ...userInfo,
         nickname: nickname,
@@ -40,21 +43,18 @@ const NicknameEditModal = ({ setIsModalOpen }: ModalProps) => {
     }
   };
 
-  const handleWithdrawalClick = () => {
-    // 회원 탈퇴 api 호출
-  };
-
   return (
     <Div>
       <Container>
         <XBtn onClick={() => setIsModalOpen(false)}>X</XBtn>
-        <p>변경할 닉네임을 입력해주세요!</p>
+        <p>
+          닉네임을 입력해주세요!
+          <br />
+          기본 닉네임은 카카오톡 이름입니다.
+        </p>
         <Form onSubmit={handleSubmit}>
           <input type="text" value={nickname} onChange={handleInputChange} />
           <button type="submit">저장</button>
-          <button className="withdrawal" onClick={handleWithdrawalClick}>
-            회원 탈퇴
-          </button>
         </Form>
       </Container>
     </Div>
@@ -86,7 +86,8 @@ const Container = styled.div`
     font-size: 32px;
     text-align: center;
     margin: auto;
-    margin: 20px;
+    margin-bottom: 20px;
+    margin-top: 25px;
   }
 `;
 
@@ -107,8 +108,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 200px;
-  margin-bottom: 25px;
+  height: 135px;
   justify-content: space-between;
   input {
     border-radius: 90px;
@@ -128,14 +128,7 @@ const Form = styled.form`
     background: #ffe2e2;
     color: black;
     cursor: pointer;
-
-    // 회원 탈퇴 버튼 css
-    &.withdrawal {
-      border-radius: 15px;
-      border: 5px solid rgba(255, 226, 226, 0.93);
-      background: #fff;
-    }
   }
 `;
 
-export default NicknameEditModal;
+export default NicknameModal;

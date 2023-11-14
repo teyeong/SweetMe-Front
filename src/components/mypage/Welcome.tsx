@@ -1,11 +1,14 @@
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 
 import bigLogo from '../../assets/big-logo.svg';
+import { UserInfoAtom } from 'recoil/User';
 
 const Welcome = () => {
+  const userInfo = useRecoilValue(UserInfoAtom);
   return (
     <Div>
-      <p>환영합니다. username 님</p>
+      <p>환영합니다. {userInfo.nickname} 님</p>
     </Div>
   );
 };

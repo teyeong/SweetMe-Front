@@ -1,16 +1,35 @@
 export type Study = {
   postId: number;
+  memberName: string;
   title: string;
-  deadline: string;
-  likes: number;
+  content: string;
+  createdDate: string;
+  deadLine: string;
+  startDate: string;
+  endDate: string;
+  people: number;
   view: number;
-  category: string;
-  userLiked: boolean;
-  ads: boolean;
   recruitment: boolean;
-  contact: string;
+  category: string;
   meeting: string;
-  text?: string;
+  contact: string;
+  promotion: boolean;
+  heartCount: number;
+  heart: boolean;
+};
+
+export type User = {
+  nickname: string;
+  email: string;
+  profileImage: string;
+};
+
+export type Login = {
+  nickname: string;
+  email: string;
+  accessToken: string;
+  refreshToken: string;
+  isFirst: boolean;
 };
 
 export type StatusBtn = {

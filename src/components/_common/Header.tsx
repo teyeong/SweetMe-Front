@@ -1,35 +1,67 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { LoginAtom, LoginStateAtom } from '../../recoil/Login';
+import { UserInfoAtom } from 'recoil/User';
 
 import logo from '../../assets/logo.svg';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import LoginModal from './LoginModal';
+import NicknameModal from './NicknameModal';
+import { getUserInfo } from 'api/user';
 
 const Header = () => {
-  // 로그인 여부 확인
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // 로그인 모달 열림 유무
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loginState, setLoginState] = useRecoilState(LoginStateAtom); // 로그인 여부
+  const loginInfo = useRecoilValue(LoginAtom); // 로그인 정보
+  const [userInfo, setUserInfo] = useRecoilState(UserInfoAtom); // 유저 정보
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // 로그인 모달 열림 유무
+  const [isNicknameModalOpen, setIsNicknameModalOpen] = useState(false); // 닉네임 모달 열림 유무
 
   const navigate = useNavigate();
-  // 카카오 로그인 여부 파악 함수 작성 예정
+
+  // 처음 가입한 사용자인지 판단 -> 닉네임 설정 모달 열기
+  useEffect(() => {
+    if (loginInfo.isFirst) {
+      setIsNicknameModalOpen(true);
+    }
+  }, []);
 
   const handleCreateClick = () => {
-    // 로그인된 상태인 경우에만 라우팅 코드 추가 예정
-    navigate('/create');
+    if (loginState) {
+      navigate('/create');
+    } else {
+      alert('로그인 후 이용 가능합니다.');
+    }
   };
 
+  // 로그인 모달 열기
   const handleLoginClick = () => {
-    // 로그인 모달
-    setIsModalOpen(true);
+    setIsLoginModalOpen(true);
   };
 
-  // 로고 클릭 시 메인페이지로 이동
+  // 로고 클릭 시 메인페이지로 이동 + 새로고침
   const handleLogoClick = () => {
     window.location.href = '/';
   };
+
+  useEffect(() => {
+    if (loginState && !userInfo.profileImage) {
+      const getUser = async () => {
+        const res = await getUserInfo();
+        const data = res?.data;
+        console.log('유저 정보', data);
+        if (data) {
+          setUserInfo({
+            nickname: data.nickname,
+            email: data.email,
+            profileImage: data.profileImage,
+          });
+        }
+      };
+      getUser();
+    }
+  }, []);
 
   return (
     <>
@@ -37,11 +69,11 @@ const Header = () => {
         <div className="div"></div>
         <Logo src={logo} onClick={handleLogoClick} />
         <BtnContainer>
-          {isLoggedIn ? (
+          {loginState ? (
             <>
               <Btn onClick={handleCreateClick}>모집하기</Btn>
               <Profile href="/mypage">
-                {/* <Img /> 사용자 프로필 이미지 src로 받아서 사용 */}
+                <Img src={userInfo.profileImage} />
               </Profile>
             </>
           ) : (
@@ -52,7 +84,10 @@ const Header = () => {
           )}
         </BtnContainer>
       </Div>
-      {isModalOpen && <LoginModal setIsModalOpen={setIsModalOpen} />}
+      {isLoginModalOpen && <LoginModal setIsModalOpen={setIsLoginModalOpen} />}
+      {isNicknameModalOpen && (
+        <NicknameModal setIsModalOpen={setIsNicknameModalOpen} />
+      )}
     </>
   );
 };

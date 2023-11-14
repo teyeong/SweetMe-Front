@@ -2,13 +2,15 @@ import StudyDetail from './StudyDetail';
 import TagBtn from './Btn/TagBtn';
 import SortBtn from './Btn/SortBtn';
 import RecruitBtn from './Btn/RecruitBtn';
-import data from './dummy-data.json';
 
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 
 import { Study } from 'components/_common/props';
+import { sort, recuitment } from 'components/_common/filter';
 import Loader from 'components/_common/Loader';
+
+import { filter } from 'api/study';
 
 const StudyList = () => {
   // 태그 상태 저장 useState
@@ -16,8 +18,9 @@ const StudyList = () => {
   const [selectedSortBtn, setSelectedSortBtn] = useState<string>('최신순');
   const [selectedTagBtn, setSelectedTagBtn] = useState<string>('');
 
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(false); // 데이터 가져오기 로딩
-  const [itemList, setItemList] = useState<Study[]>(data.slice(0, 24)); // 데이터 24개씩 자르기
+  const [itemList, setItemList] = useState<Study[]>([]); // 데이터 24개씩 자르기
   const [isLeft, setIsLeft] = useState<boolean>(false); // 남은 데이터 유무
   const [index, setIndex] = useState<number>(24); // 자른 데이터 인덱스
 
@@ -41,9 +44,35 @@ const StudyList = () => {
     }
   };
 
+  // 데이터 불러오기 api 호출
   useEffect(() => {
-    // 데이터 불러오기 api 추가
-    console.log('selectedTagBtn', selectedTagBtn);
+    console.log(selectedRecruitBtn, selectedSortBtn, selectedTagBtn);
+    const sortValue = sort[selectedSortBtn];
+    const recuitValue = recuitment[selectedRecruitBtn];
+    let apiURL = `/posts/filtering?sort=${sortValue}`;
+    setIsLoading(true);
+    const getData = async () => {
+      if (recuitValue === 'null') {
+        if (selectedTagBtn) {
+          // recuitment 없음 & tag 있음 api 주소
+          apiURL += `&category=${selectedTagBtn}`;
+        }
+      } else {
+        if (selectedTagBtn) {
+          // recuitment 있음 & tag 있음 api 주소
+          apiURL += `&category=${selectedTagBtn}&recruitment=${recuitValue}`;
+        } else {
+          // recuitment 있음 & tag 없음 api 주소
+          apiURL += `&recruitment=${recuitValue}`;
+        }
+      }
+      const res = await filter(apiURL);
+      setData(res?.data);
+      setItemList(res?.data.slice(0, 24));
+      setIsLoading(false);
+      console.log(res?.data);
+    };
+    getData();
   }, [selectedRecruitBtn, selectedSortBtn, selectedTagBtn]);
 
   return (
@@ -57,11 +86,10 @@ const StudyList = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <ItemDiv>
+        <ItemDiv className={`${data.length === 0 && 'empty'}`}>
           {itemList.map((study) => {
             return <StudyDetail key={study.postId} study={study} />;
           })}
-          {/* <div ref={setTarget}>{isLoaded && <div>로딩 중</div>}</div> */}
           {isLeft && <MoreBtn onClick={handleMoreClick}>더보기</MoreBtn>}
         </ItemDiv>
       )}
@@ -109,6 +137,10 @@ const ItemDiv = styled.div`
   }
   @media (max-width: 660px) {
     width: 330px;
+  }
+  &.empty {
+    width: 100%;
+    height: 210px;
   }
 `;
 

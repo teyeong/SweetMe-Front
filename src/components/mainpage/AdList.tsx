@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import styled from 'styled-components';
-import data from './ad-dummy-data.json';
+//import data from './ad-dummy-data.json';
 import StudyDetail from './StudyDetail';
 import Loader from '../_common/Loader';
+import { promo } from 'api/study';
+import { Study } from 'components/_common/props';
 
 const AdList = () => {
   const containerRef = useRef<HTMLDivElement | null>(null); // slides를 담는 컨테이너를 저장하는 ref
@@ -12,11 +14,27 @@ const AdList = () => {
   const [itemCnt, setItemCnt] = useState(4); // 아이템 개수
   const [isTransiting, setIsTransiting] = useState(false); // 버튼이 클릭된 상태인지 확인
   const [isLoading, setIsLoading] = useState<boolean>(false); // 아이템 가져오기 로딩
+  const [data, setData] = useState<Study[]>([]); // 홍보 중인 데이터
+
+  // 데이터 불러오기 api 호출
+  useEffect(() => {
+    setIsLoading(true);
+    const getData = async () => {
+      const res = await promo();
+      setData(res?.data);
+      setIsLoading(false);
+    };
+    getData();
+  }, []);
 
   // 화면 너비에 따른 아이템 개수 설정 useEffect
   useEffect(() => {
     const windowWidth = window.innerWidth;
 
+    if (data.length < 4) {
+      setItemCnt(4);
+      return;
+    }
     if (windowWidth <= 660) {
       setItemCnt(1);
     } else if (windowWidth <= 990) {
@@ -159,40 +177,44 @@ const AdList = () => {
   }, [actionHandler]);
 
   return (
-    <Div>
-      <BtnDiv>
-        <LeftBtn
-          onClick={() => {
-            // trasition이 끝날 때까지 버튼 클릭 금지
-            if (!isTransiting) {
-              actionHandler('prev');
-            }
-          }}
-        />
-        <RightBtn
-          onClick={() => {
-            // trasition이 끝날 때까지 버튼 클릭 금지
-            if (!isTransiting) {
-              actionHandler('next');
-            }
-          }}
-        />
-      </BtnDiv>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <ItemDiv>
-          <div
-            ref={containerRef}
-            style={{
-              transform: `translateX(${-translateX}px)`,
-            }}
-          >
-            {slides}
-          </div>
-        </ItemDiv>
+    <>
+      {data.length > 0 && (
+        <Div>
+          <BtnDiv>
+            <LeftBtn
+              onClick={() => {
+                // trasition이 끝날 때까지 버튼 클릭 금지
+                if (!isTransiting) {
+                  actionHandler('prev');
+                }
+              }}
+            />
+            <RightBtn
+              onClick={() => {
+                // trasition이 끝날 때까지 버튼 클릭 금지
+                if (!isTransiting) {
+                  actionHandler('next');
+                }
+              }}
+            />
+          </BtnDiv>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <ItemDiv>
+              <div
+                ref={containerRef}
+                style={{
+                  transform: `translateX(${-translateX}px)`,
+                }}
+              >
+                {slides}
+              </div>
+            </ItemDiv>
+          )}
+        </Div>
       )}
-    </Div>
+    </>
   );
 };
 
