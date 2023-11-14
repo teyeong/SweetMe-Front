@@ -1,6 +1,7 @@
 import CreatePage from 'pages/CreatePage';
 import DetailPage from 'pages/DetailPage';
 import EditPage from 'pages/EditPage';
+import KakaoAuthPage from 'pages/KakaoAuthPage';
 import MainPage from 'pages/MainPage';
 import MyPage from 'pages/MyPage';
 import React from 'react';
@@ -15,6 +16,7 @@ function App() {
         <Route path={'/detail/:postId'} element={<DetailPage />} />
         <Route path={'/create'} element={<CreatePage />} />
         <Route path={'/edit/:postId'} element={<EditPage />} />
+        <Route path={'/oauth/kakao/callback'} element={<KakaoAuthPage />} />
       </Routes>
     </>
   );

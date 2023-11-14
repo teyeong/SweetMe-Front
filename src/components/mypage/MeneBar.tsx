@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import post from '../../assets/mypage/post-icon.svg';
@@ -9,10 +10,14 @@ import user from '../../assets/mypage/user-icon.svg';
 import Welcome from './Welcome';
 import StudyList from './StudyList';
 import NicknameEditModal from './NicknameEditModal';
+import { logout } from 'api/user';
+import { UserInfoAtom } from 'recoil/User';
 
 const MenuBar = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const userInfo = useRecoilValue(UserInfoAtom);
 
   // 작성한 글 or 좋아요한 글 클릭
   const handleMenuClick = (index: number) => {
@@ -26,9 +31,14 @@ const MenuBar = () => {
   };
 
   // 로그아웃 클릭
-  const handleLogoutClick = () => {
-    // 로그아웃 api 추가
-    setActiveIndex(-1);
+  const handleLogoutClick = async () => {
+    // 로그아웃 api
+    const res = await logout();
+    if (res?.status === 200) {
+      setActiveIndex(-1);
+      window.localStorage.clear();
+      window.location.href = '/';
+    }
   };
 
   const menuArr = [
@@ -85,7 +95,7 @@ const MenuBar = () => {
         </MenuDiv>
         <UserDiv>
           <div>{/* <Img /> 사용자 프로필 이미지 src로 받아서 사용 */}</div>
-          <p>username</p>
+          <p>{userInfo.nickname}</p>
         </UserDiv>
       </Div>
       {activeIndex === -1 ? <Welcome /> : menuArr[activeIndex].menuContent}
