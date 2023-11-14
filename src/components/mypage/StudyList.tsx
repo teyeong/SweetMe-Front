@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import data from '../mainpage/dummy-data.json';
+//import data from '../mainpage/dummy-data.json';
 import StudyDetail from 'components/mainpage/StudyDetail';
 import book from '../../assets/mypage/book-icon.svg';
 import { Study } from 'components/_common/props';
@@ -14,10 +14,18 @@ type StudyListProps = {
 const StudyList = ({ type }: StudyListProps) => {
   const [title, setTitle] = useState(''); // 작성, 좋아요 중 하나
 
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(false); // 데이터 가져오기 로딩
-  const [itemList, setItemList] = useState<Study[]>(data.slice(0, 24)); // 데이터 24개씩 자르기
+  const [itemList, setItemList] = useState(data.slice(0, 24)); // 데이터 24개씩 자르기
   const [isLeft, setIsLeft] = useState<boolean>(false); // 남은 데이터 유무
   const [index, setIndex] = useState<number>(24); // 자른 데이터 인덱스
+
+  useEffect(() => {
+    const getData = async () => {
+      // /post/heart
+      // /post/member
+    };
+  });
 
   useEffect(() => {
     if (type === 'POST') {
@@ -51,7 +59,7 @@ const StudyList = ({ type }: StudyListProps) => {
 
   return (
     <Div>
-      <TitleDiv>
+      {/* <TitleDiv>
         <img src={book} />
         <p>{title}한 글 목록</p>
       </TitleDiv>
@@ -64,7 +72,7 @@ const StudyList = ({ type }: StudyListProps) => {
           })}
           {isLeft && <MoreBtn onClick={handleMoreClick}>더보기</MoreBtn>}
         </ItemDiv>
-      )}
+      )} */}
     </Div>
   );
 };
