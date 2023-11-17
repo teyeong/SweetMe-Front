@@ -9,27 +9,39 @@ const DetailBox = ({ study }: { study: Study }) => {
   const [categoryTag, setCategoryTag] = useState('');
   const [contactTag, setContactTag] = useState('');
   const [meetingTag, setMeetingTag] = useState('');
+  const [people, setPeople] = useState(0);
+  const [studyPeriod, setStudyPeriod] = useState('');
   const [userLiked, setUserLiked] = useState(false);
 
-  // 카테고리 태그 설정
+  // 스터디 기간 형식 변경 함수
+  const formatDate = (dateString: string) => {
+    const dateObject = new Date(dateString);
+    return `${dateObject.getFullYear()}.${(dateObject.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}.${dateObject.getDate().toString().padStart(2, '0')}`;
+  };
+
+  // 상세 정보 설정
   useEffect(() => {
+    const formattedStartDate = formatDate(study.startDate);
+    const formattedEndDate = formatDate(study.endDate);
+    const formattedStudyPeriod = `${formattedStartDate}-${formattedEndDate}`;
+
+    setStudyPeriod(formattedStudyPeriod);
     setCategoryTag(categories[study.category]);
-  }, [study.category]);
-
-  // 연락 태그 설정
-  useEffect(() => {
     setContactTag(contact[study.contact]);
-  }, [study.contact]);
-
-  // 대면/비대면 태그 설정
-  useEffect(() => {
     setMeetingTag(meeting[study.meeting]);
-  }, [study.meeting]);
-
-  // 좋아요 여부 설정
-  useEffect(() => {
-    setUserLiked(study.userLiked);
-  }, [study.userLiked]);
+    setPeople(study.people);
+    setUserLiked(study.heart);
+  }, [
+    study.category,
+    study.contact,
+    study.meeting,
+    study.people,
+    study.heart,
+    study.startDate,
+    study.endDate,
+  ]);
 
   const handleHeartClick = () => {
     return;
@@ -51,7 +63,7 @@ const DetailBox = ({ study }: { study: Study }) => {
           </ListItem>
           <ListItem className="last">
             <Title>모집 인원</Title>
-            <Info>3명</Info>
+            <Info>{people}</Info>
           </ListItem>
         </DetailList>
 
@@ -64,7 +76,7 @@ const DetailBox = ({ study }: { study: Study }) => {
           </ListItem>
           <ListItem>
             <Title>스터디 기간</Title>
-            <Info>2023.09.24-2023.12.20</Info>
+            <Info>{studyPeriod}</Info>
           </ListItem>
           <ListItem className="last">
             <Title>대면/비대면</Title>
@@ -75,7 +87,7 @@ const DetailBox = ({ study }: { study: Study }) => {
         </DetailList>
       </ListWrapper>
       <UserLikedWrapper>
-        {study.userLiked ? (
+        {userLiked ? (
           <HeartIcon onClick={handleHeartClick} />
         ) : (
           <EmptyHeartIcon onClick={handleHeartClick}></EmptyHeartIcon>

@@ -1,11 +1,9 @@
 import styled from 'styled-components';
 
-import { Study } from 'components/_common/props';
-
-const DetailText = ({ study }: { study: Study }) => {
+const DetailText = ({ content }: { content: string }) => {
   return (
     <Container>
-      <Text>{study.text}</Text>
+      <Text>{content}</Text>
     </Container>
   );
 };

@@ -4,12 +4,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
 import DeleteModal from './DeleteModal';
 
+import { changeRecruit, deletePost } from 'api/studydetail';
+
 const BtnGroup = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isBtnActive, setBtnActive] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
+
   const { postId } = useParams();
+  const postIdAsNumber = postId ? parseInt(postId) : 0;
   const navigate = useNavigate();
 
   // 결제 모달
@@ -32,18 +36,22 @@ const BtnGroup = () => {
   useEffect(() => {
     if (isDelete) {
       // 삭제 api
+      deletePost(postIdAsNumber).then((res) => {
+        console.log(res);
+        alert('삭제되었습니다.');
+      });
       navigate('/');
     } else {
       // check 필요
-      console.log('삭제');
       setShowDeleteModal(false);
     }
   }, [isDelete]);
 
-  // 모집 완료
-  const handleRecruit = () => {
-    // 모집 완료 api
-    return;
+  // 모집 완료 api
+  const handleRecruit = async () => {
+    changeRecruit(postIdAsNumber).then((res) => {
+      console.log(res);
+    });
   };
 
   return (
