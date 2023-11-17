@@ -268,7 +268,7 @@ const Title = styled.input`
 `;
 
 const MainWrapper = styled.div`
-  width: 80%;
+  width: 85%;
   display: flex;
   justify-content: space-between;
   padding: 30px 0;
