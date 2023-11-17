@@ -8,7 +8,7 @@ const EditPage = () => {
   return (
     <Container>
       <Header />
-      <Form></Form>
+      <Form />
     </Container>
   );
 };

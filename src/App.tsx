@@ -11,7 +11,6 @@ import { TagProvider } from 'components/createpage/TagProvider';
 function App() {
   return (
     <>
-
       <TagProvider>
         <Routes>
           <Route path={'/'} element={<MainPage />} />
@@ -21,7 +20,6 @@ function App() {
           <Route path={'/edit/:postId'} element={<EditPage />} />
         </Routes>
       </TagProvider>
-
     </>
   );
 }
