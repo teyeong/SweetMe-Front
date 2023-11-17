@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import OptionMenu from './OptionMenu';
-
-import { categories } from 'components/_common/tags';
+import { CategoryAtom, MeetingAtom, ContactAtom } from '../../recoil/Tags';
 
 interface DropdownProps {
   type?: string;
@@ -15,7 +15,10 @@ const Dropdown = (props: DropdownProps) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isMeetingOpen, setIsMeetingOpen] = useState(false);
-  const [isTagSelected, setIsTagSelected] = useState(true);
+
+  const categoryInfo = useRecoilValue(CategoryAtom);
+  const meetingInfo = useRecoilValue(MeetingAtom);
+  const contactInfo = useRecoilValue(ContactAtom);
 
   const handleDropdownClick = (type: string) => {
     if (type === 'category') {

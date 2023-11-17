@@ -1,22 +1,18 @@
 import styled from 'styled-components';
-import { useState, useContext } from 'react';
+import { useRecoilState } from 'recoil';
 
 import { dev, language, daily, contact, meeting } from '../_common/tags';
-import { TagContext } from './TagProvider';
+import { CategoryAtom, MeetingAtom, ContactAtom } from '../../recoil/Tags';
 
 type TagOptionProps = {
   type: 'dev' | 'lang' | 'daily' | 'contact' | 'meeting';
 };
 
 const TagList = ({ type }: TagOptionProps) => {
-  const {
-    categoryTag,
-    setCategoryTag,
-    meetingTag,
-    setMeetingTag,
-    contactTag,
-    setContactTag,
-  } = useContext(TagContext);
+  const [categoryTag, setCategoryTag] = useRecoilState(CategoryAtom);
+  const [meetingTag, setMeetingTag] = useRecoilState(MeetingAtom);
+  const [contactTag, setContactTag] = useRecoilState(ContactAtom);
+
   let tagObject: { [key: string]: string } = {};
 
   switch (type) {
@@ -41,11 +37,11 @@ const TagList = ({ type }: TagOptionProps) => {
 
   const handleTagClick = (type: string, tag: string) => {
     if (type === 'contact') {
-      setContactTag(tag);
+      setContactTag({ isSelected: true, selectedTag: tag });
     } else if (type === 'meeting') {
-      setMeetingTag(tag);
+      setMeetingTag({ isSelected: true, selectedTag: tag });
     } else {
-      setCategoryTag(tag);
+      setCategoryTag({ isSelected: true, selectedTag: tag });
     }
   };
 
