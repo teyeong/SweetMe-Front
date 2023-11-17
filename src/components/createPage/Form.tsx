@@ -1,14 +1,12 @@
 import styled from 'styled-components';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import Dropdown from './Dropdown';
 import { Border } from 'components/_common/pageLayout';
-import { TagContext, TagProvider } from './TagProvider';
+import { CategoryAtom, MeetingAtom, ContactAtom } from '../../recoil/Tags';
 
-// POST data 형식
-interface SubmitData {
-  title: string;
-}
+import { submitForm } from 'api/create';
 
 const initialDate = {
   year: 0,
@@ -17,7 +15,9 @@ const initialDate = {
 };
 
 const Form = () => {
-  const { categoryTag, meetingTag, contactTag } = useContext(TagContext);
+  const categoryTag = useRecoilValue(CategoryAtom);
+  const meetingTag = useRecoilValue(MeetingAtom);
+  const contactTag = useRecoilValue(ContactAtom);
   const [title, setTitle] = useState('');
   const [people, setPeople] = useState(0);
   const [deadline, setDeadline] = useState(initialDate);
@@ -114,18 +114,28 @@ const Form = () => {
     setFormattedEndDate(formattedEndDate);
   }, [deadline, startDate, endDate]);
 
-  // content 저장
+  // 글 작성 내용 저장
   const onChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
 
+  // 스터디 작성 내용 POST API
   const handleSubmit = () => {
-    console.log(people);
-    console.log(title);
-    console.log(formattedDeadline);
-    console.log(formattedStartDate);
-    console.log(formattedEndDate);
-    console.log(content);
+    const formData = {
+      title: title,
+      content: content,
+      deadLine: formattedDeadline,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+      people: people,
+      category: categoryTag.selectedTag,
+      meeting: meetingTag.selectedTag,
+      contact: contactTag.selectedTag,
+    };
+
+    submitForm(formData).then((res) => {
+      console.log(res);
+    });
   };
 
   return (
