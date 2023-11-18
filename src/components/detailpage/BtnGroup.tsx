@@ -7,29 +7,32 @@ import DeleteModal from './DeleteModal';
 import { changeRecruit, deletePost } from 'api/studydetail';
 
 const BtnGroup = () => {
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isBtnActive, setBtnActive] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
+  const [activeBtn, setActiveBtn] = useState(''); // 한번에 하나의 버튼만 활성화
+
+  const [showPaymentModal, setShowPaymentModal] = useState(false); // 결제 모달
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // 삭제 모달
+  const [isDelete, setIsDelete] = useState(false); // 삭제 여부 확인
 
   const { postId } = useParams();
   const postIdAsNumber = postId ? parseInt(postId) : 0;
   const navigate = useNavigate();
 
-  // 결제 모달
-  const handlePayment = () => {
-    setShowPaymentModal(!showPaymentModal);
-    setBtnActive(!isBtnActive);
-  };
-
-  // 수정 페이지로 이동
+  // 수정 버튼 클릭 -> 수정 페이지로 이동
   const handleEdit = () => {
+    setActiveBtn('edit');
     navigate(`/edit/${postId}`);
   };
 
-  // 삭제 모달
+  // 삭제 버튼 클릭 -> 삭제 모달 팝업
   const handleDelete = () => {
-    setShowDeleteModal(!showDeleteModal);
+    if (activeBtn === 'delete') {
+      setActiveBtn('');
+      setShowDeleteModal(false);
+    } else {
+      setActiveBtn('delete');
+      setShowPaymentModal(false); // 한 번에 하나의 모달창만 활성화
+      setShowDeleteModal(true);
+    }
   };
 
   // 삭제 모달 삭제/확인 버튼 선택 시
@@ -41,33 +44,66 @@ const BtnGroup = () => {
         alert('삭제되었습니다.');
       });
       navigate('/');
-    } else {
-      // check 필요
-      setShowDeleteModal(false);
     }
   }, [isDelete]);
 
-  // 모집 완료 api
+  // 홍보 버튼 클릭 -> 결제 모달 팝업
+  const handlePayment = () => {
+    if (activeBtn === 'payment') {
+      setActiveBtn('');
+      setShowPaymentModal(false);
+    } else {
+      setActiveBtn('payment');
+      setShowDeleteModal(false); // 한 번에 하나의 모달창만 활성화
+      setShowPaymentModal(true);
+    }
+  };
+
+  // 모집 완료 버튼 클릭 -> 모집 완료 PATCH API
   const handleRecruit = async () => {
+    if (activeBtn === 'recruit') {
+      setActiveBtn('');
+    } else {
+      setActiveBtn('recruit');
+    }
     changeRecruit(postIdAsNumber).then((res) => {
       console.log(res);
+      window.location.reload(); // 새로고침
     });
   };
 
   return (
     <Wrapper>
-      <Btn onClick={handleEdit}>수정</Btn>
+      <Btn
+        onClick={handleEdit}
+        className={activeBtn === 'edit' ? 'isActive' : ''}
+      >
+        수정
+      </Btn>
       <BtnWrapper>
-        <Btn onClick={handleDelete}>삭제</Btn>
+        <Btn
+          onClick={handleDelete}
+          className={activeBtn === 'delete' ? 'isActive' : ''}
+        >
+          삭제
+        </Btn>
         {showDeleteModal ? <DeleteModal setIsDelete={setIsDelete} /> : ''}
       </BtnWrapper>
       <BtnWrapper>
-        <Btn onClick={handlePayment} className={isBtnActive ? 'isActive' : ''}>
+        <Btn
+          onClick={handlePayment}
+          className={activeBtn === 'payment' ? 'isActive' : ''}
+        >
           홍보
         </Btn>
         {showPaymentModal ? <PaymentModal /> : ''}
       </BtnWrapper>
-      <Btn onClick={handleRecruit}>모집 완료</Btn>
+      <Btn
+        onClick={handleRecruit}
+        className={activeBtn === 'recruit' ? 'isActive' : ''}
+      >
+        모집 완료
+      </Btn>
     </Wrapper>
   );
 };
