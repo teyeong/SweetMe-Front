@@ -390,6 +390,5 @@ const CompleteButton = styled.button`
   &:hover {
     background-color: var(--navy);
     color: white;
-    border-color: white;
   }
 `;
