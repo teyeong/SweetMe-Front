@@ -28,8 +28,6 @@ const Dropdown = (props: DropdownProps) => {
 
   const handleDropdownClick = (type: string) => {
     if (type === 'category') {
-      setIsContactOpen(false);
-      setIsMeetingOpen(false);
       setIsCategoryOpen(!isCategoryOpen);
     } else if (type === 'contact') {
       setIsContactOpen(!isContactOpen);
@@ -126,7 +124,7 @@ const DropdownWrapper = styled.div`
 
 const DropdownSelect = styled.button`
   background-color: var(--gray);
-  padding: 7px 20px;
+  padding: 5px 20px;
   border-radius: 20px;
   font-size: 18px;
   white-space: nowrap;
@@ -163,7 +161,7 @@ const SelectedTagWrapper = styled.div`
 `;
 
 const SelectedTag = styled.img`
-  width: 100%;
+  width: 100px;
   height: 100%;
   object-fit: cover;
 `;
