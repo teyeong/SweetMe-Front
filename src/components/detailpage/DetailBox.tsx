@@ -11,6 +11,7 @@ const DetailBox = ({ study }: { study: Study }) => {
   const [meetingTag, setMeetingTag] = useState('');
   const [people, setPeople] = useState(0);
   const [studyPeriod, setStudyPeriod] = useState('');
+  const [dday, setDday] = useState(0);
   const [userLiked, setUserLiked] = useState(false);
 
   // 스터디 기간 형식 변경 함수
@@ -23,9 +24,25 @@ const DetailBox = ({ study }: { study: Study }) => {
 
   // 상세 정보 설정
   useEffect(() => {
+    // 스터디 기간
     const formattedStartDate = formatDate(study.startDate);
     const formattedEndDate = formatDate(study.endDate);
     const formattedStudyPeriod = `${formattedStartDate}-${formattedEndDate}`;
+
+    // 디데이 계산
+    const today = new Date();
+    const parts = study?.deadLine.split('-');
+
+    if (parts) {
+      const year = parseInt(parts[0]);
+      const month = parseInt(parts[1]) - 1;
+      const day = parseInt(parts[2]);
+      const targetDateObj = new Date(year, month, day);
+
+      const timeDiff = targetDateObj.getTime() - today.getTime();
+      const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      setDday(daysRemaining);
+    }
 
     setStudyPeriod(formattedStudyPeriod);
     setCategoryTag(categories[study.category]);
@@ -41,6 +58,7 @@ const DetailBox = ({ study }: { study: Study }) => {
     study.heart,
     study.startDate,
     study.endDate,
+    study.deadLine,
   ]);
 
   const handleHeartClick = () => {
@@ -59,7 +77,7 @@ const DetailBox = ({ study }: { study: Study }) => {
           </ListItem>
           <ListItem>
             <Title>모집 마감</Title>
-            <Info>D-7</Info>
+            <Info>{dday > 0 ? `D-${dday}` : `D+${Math.abs(dday)}`}</Info>
           </ListItem>
           <ListItem className="last">
             <Title>모집 인원</Title>
