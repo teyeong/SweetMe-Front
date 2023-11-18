@@ -161,18 +161,23 @@ const Form = () => {
                   type="number"
                   className="year"
                   onChange={onDeadlineChange}
+                  min="2023"
                 />
                 <p>년</p>
                 <DateInput
                   type="number"
                   className="month"
                   onChange={onDeadlineChange}
+                  min="1"
+                  max="12"
                 />
                 <p>월</p>
                 <DateInput
                   type="number"
                   className="day"
                   onChange={onDeadlineChange}
+                  min="1"
+                  max="31"
                 />
                 <p>일</p>
               </DateSelect>
@@ -184,18 +189,23 @@ const Form = () => {
                   type="number"
                   className="year start"
                   onChange={onStartDateChange}
+                  min="2023"
                 />
                 <p>년</p>
                 <DateInput
                   type="number"
                   className="month start"
                   onChange={onStartDateChange}
+                  min="1"
+                  max="12"
                 />
                 <p>월</p>
                 <DateInput
                   type="number"
                   className="day start"
                   onChange={onStartDateChange}
+                  min="1"
+                  max="31"
                 />
                 <p>일</p>
                 <p> ~ </p>
@@ -203,25 +213,30 @@ const Form = () => {
                   type="number"
                   className="year end"
                   onChange={onEndDateChange}
+                  min="2023"
                 />
                 <p>년</p>
                 <DateInput
                   type="number"
                   className="month end"
                   onChange={onEndDateChange}
+                  min="1"
+                  max="12"
                 />
                 <p>월</p>
                 <DateInput
                   type="number"
                   className="day end"
                   onChange={onEndDateChange}
+                  min="1"
+                  max="31"
                 />
                 <p>일</p>
               </DateSelect>
             </InputListItem>
             <InputListItem className="last">
               <InputListTitle className="default">모집 인원</InputListTitle>
-              <NumInput type="number" onChange={onChangePeople} />
+              <NumInput type="number" onChange={onChangePeople} min="1" />
               <p>명</p>
             </InputListItem>
           </InputList>
