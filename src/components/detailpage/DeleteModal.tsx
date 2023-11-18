@@ -27,7 +27,7 @@ const DeleteModal = (props: DeleteModalProps) => {
 export default DeleteModal;
 
 const Wrapper = styled.div`
-  width: 340px;
+  width: 280px;
   padding: 15px 10px;
   display: flex;
   flex-direction: column;
@@ -37,8 +37,7 @@ const Wrapper = styled.div`
 
   position: absolute;
   bottom: calc(100% + 15px);
-  left: -100%;
-  z-index: 300;
+  left: -90%;
 `;
 
 const Header = styled.div`
@@ -59,10 +58,11 @@ const Border = styled.div`
 
 const Main = styled.div`
   display: flex;
+  justify-content: center;
 `;
 
 const Btn = styled.button`
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border-radius: 8px;
   background-color: var(--light_pink);
