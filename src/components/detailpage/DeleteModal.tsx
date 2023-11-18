@@ -9,10 +9,6 @@ const DeleteModal = (props: DeleteModalProps) => {
     props.setIsDelete(true);
   };
 
-  const handleNo = () => {
-    props.setIsDelete(false);
-  };
-
   return (
     <Wrapper>
       <Header>
@@ -22,9 +18,6 @@ const DeleteModal = (props: DeleteModalProps) => {
       <Main>
         <Btn className="yes" onClick={handleYes}>
           확인
-        </Btn>
-        <Btn className="no" onClick={handleNo}>
-          취소
         </Btn>
       </Main>
     </Wrapper>
