@@ -1,7 +1,4 @@
 import { atom } from 'recoil';
-import { recoilPersist } from 'recoil-persist';
-
-const { persistAtom } = recoilPersist();
 
 interface TagAtom {
   isSelected: boolean;
@@ -14,7 +11,6 @@ export const CategoryAtom = atom<TagAtom>({
     isSelected: false,
     selectedTag: '',
   },
-  effects_UNSTABLE: [persistAtom],
 });
 
 export const MeetingAtom = atom<TagAtom>({
@@ -23,7 +19,6 @@ export const MeetingAtom = atom<TagAtom>({
     isSelected: false,
     selectedTag: '',
   },
-  effects_UNSTABLE: [persistAtom],
 });
 
 export const ContactAtom = atom<TagAtom>({
@@ -32,5 +27,4 @@ export const ContactAtom = atom<TagAtom>({
     isSelected: false,
     selectedTag: '',
   },
-  effects_UNSTABLE: [persistAtom],
 });
