@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { Study } from 'components/_common/props';
 import { categories, contact, meeting } from 'components/_common/tags';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
+
+import { likePost, deleteLikePost } from 'api/studydetail';
 
 const DetailBox = ({ study }: { study: Study }) => {
   const [categoryTag, setCategoryTag] = useState('');
@@ -13,6 +16,9 @@ const DetailBox = ({ study }: { study: Study }) => {
   const [studyPeriod, setStudyPeriod] = useState('');
   const [dday, setDday] = useState(0);
   const [userLiked, setUserLiked] = useState(false);
+
+  const { postId } = useParams();
+  const postIdAsNumber = postId ? parseInt(postId) : 0;
 
   // 스터디 기간 형식 변경 함수
   const formatDate = (dateString: string) => {
@@ -61,7 +67,19 @@ const DetailBox = ({ study }: { study: Study }) => {
     study.deadLine,
   ]);
 
-  const handleHeartClick = () => {
+  // 좋아요 API
+  const handleEmptyHeartClick = () => {
+    likePost(postIdAsNumber).then((res) => {
+      console.log(res);
+    });
+    return;
+  };
+
+  // 좋아요 취소 API
+  const handleFullHeartClick = () => {
+    deleteLikePost(postIdAsNumber).then((res) => {
+      console.log(res);
+    });
     return;
   };
 
@@ -106,9 +124,9 @@ const DetailBox = ({ study }: { study: Study }) => {
       </ListWrapper>
       <UserLikedWrapper>
         {userLiked ? (
-          <HeartIcon onClick={handleHeartClick} />
+          <HeartIcon onClick={handleFullHeartClick} />
         ) : (
-          <EmptyHeartIcon onClick={handleHeartClick}></EmptyHeartIcon>
+          <EmptyHeartIcon onClick={handleEmptyHeartClick} />
         )}
       </UserLikedWrapper>
     </Container>
@@ -169,6 +187,8 @@ const UserLikedWrapper = styled.div`
 const HeartIcon = styled(IoMdHeart)`
   font-size: 30px;
   color: var(--navy);
+  cursor: pointer;
+
   &:hover {
     opacity: 0.6;
   }
@@ -176,4 +196,8 @@ const HeartIcon = styled(IoMdHeart)`
 
 const EmptyHeartIcon = styled(IoMdHeartEmpty)`
   font-size: 30px;
+
+  &:hover {
+    color: var(--navy);
+  }
 `;
