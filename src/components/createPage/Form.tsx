@@ -28,10 +28,18 @@ const Form = () => {
   const [formattedEndDate, setFormattedEndDate] = useState('');
   const [content, setContent] = useState('');
 
+  // 현재 날짜 가져오기
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentDay = currentDate.getDate();
+
+  // 제목 저장
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
+  // 모집 인원 저장
   const onChangePeople = (e: React.ChangeEvent<HTMLInputElement>) => {
     const peopleAsNum = parseInt(e.target.value);
     setPeople(peopleAsNum);
@@ -52,16 +60,32 @@ const Form = () => {
   // 모집 마감일 저장
   const onDeadlineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { className, value } = e.target;
+
     if (className.includes('year')) {
       handleDateChange('year', value, setDeadline);
     } else if (className.includes('month')) {
       handleDateChange('month', value, setDeadline);
     } else if (className.includes('day')) {
-      handleDateChange('day', value, setDeadline);
+      const enteredYear = deadline.year;
+      const enteredMonth = deadline.month;
+      const enteredDay = parseInt(value);
+
+      // 모집 마감일을 현재 날짜 이후로 제한
+      if (
+        enteredYear > currentYear ||
+        (enteredYear === currentYear && enteredMonth > currentMonth) ||
+        (enteredYear === currentYear &&
+          enteredMonth === currentMonth &&
+          enteredDay >= currentDay)
+      ) {
+        handleDateChange('day', value, setDeadline);
+      } else {
+        console.error('invalid deadline');
+      }
     }
   };
 
-  // 시작 날짜 저장
+  // 스터디 시작 날짜 저장
   const onStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { className, value } = e.target;
     if (className.includes('year')) {
@@ -69,11 +93,26 @@ const Form = () => {
     } else if (className.includes('month')) {
       handleDateChange('month', value, setStartDate);
     } else if (className.includes('day')) {
-      handleDateChange('day', value, setStartDate);
+      const enteredYear = startDate.year;
+      const enteredMonth = startDate.month;
+      const enteredDay = parseInt(value);
+
+      // 스터디 시작 날짜를 현재 날짜 이후로 제한
+      if (
+        enteredYear > currentYear ||
+        (enteredYear === currentYear && enteredMonth > currentMonth) ||
+        (enteredYear === currentYear &&
+          enteredMonth === currentMonth &&
+          enteredDay >= currentDay)
+      ) {
+        handleDateChange('day', value, setStartDate);
+      } else {
+        console.error('invalid start date');
+      }
     }
   };
 
-  // 끝 날짜 저장
+  // 스터디 끝 날짜 저장
   const onEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { className, value } = e.target;
     if (className.includes('year')) {
@@ -81,7 +120,22 @@ const Form = () => {
     } else if (className.includes('month')) {
       handleDateChange('month', value, setEndDate);
     } else if (className.includes('day')) {
-      handleDateChange('day', value, setEndDate);
+      const enteredYear = endDate.year;
+      const enteredMonth = endDate.month;
+      const enteredDay = parseInt(value);
+
+      // 스터디 끝 날짜를 스터디 시작 날짜 이후로 제한
+      if (
+        enteredYear > startDate.year ||
+        (enteredYear === startDate.year && enteredMonth > startDate.month) ||
+        (enteredYear === startDate.year &&
+          enteredMonth === startDate.month &&
+          enteredDay >= startDate.day)
+      ) {
+        handleDateChange('day', value, setEndDate);
+      } else {
+        console.error('invalid end date');
+      }
     }
   };
 
