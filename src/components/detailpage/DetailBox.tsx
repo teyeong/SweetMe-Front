@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
+import { LoginStateAtom } from '../../recoil/Login';
 import { Study } from 'components/_common/props';
 import { categories, contact, meeting } from 'components/_common/tags';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
@@ -9,6 +11,8 @@ import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { likePost, deleteLikePost } from 'api/studydetail';
 
 const DetailBox = ({ study }: { study: Study }) => {
+  const loginState = useRecoilValue(LoginStateAtom); // 로그인 여부
+
   const [categoryTag, setCategoryTag] = useState('');
   const [contactTag, setContactTag] = useState('');
   const [meetingTag, setMeetingTag] = useState('');
@@ -69,10 +73,17 @@ const DetailBox = ({ study }: { study: Study }) => {
 
   // 좋아요 API
   const handleEmptyHeartClick = () => {
-    likePost(postIdAsNumber).then((res) => {
-      console.log(res);
-    });
-    window.location.reload(); // 새로고침
+    if (loginState) {
+      likePost(postIdAsNumber).then((res) => {
+        console.log(res);
+      });
+      setTimeout(() => {
+        window.location.reload(); // 새로고침
+      }, 500);
+    } else {
+      alert('로그인 후 이용 가능합니다.');
+    }
+
     return;
   };
 
@@ -81,7 +92,9 @@ const DetailBox = ({ study }: { study: Study }) => {
     deleteLikePost(postIdAsNumber).then((res) => {
       console.log(res);
     });
-    window.location.reload(); // 새로고침
+    setTimeout(() => {
+      window.location.reload(); // 새로고침
+    }, 500);
     return;
   };
 
@@ -198,6 +211,7 @@ const HeartIcon = styled(IoMdHeart)`
 
 const EmptyHeartIcon = styled(IoMdHeartEmpty)`
   font-size: 30px;
+  cursor: pointer;
 
   &:hover {
     color: var(--navy);

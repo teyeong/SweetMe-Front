@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import Header from 'components/_common/Header';
 import { Container, Body, Border } from 'components/_common/pageLayout';
@@ -11,6 +12,7 @@ import DetailText from 'components/detailpage/DetailText';
 import BtnGroup from 'components/detailpage/BtnGroup';
 
 import { getStudyDetail } from 'api/studydetail';
+import { UserInfoAtom } from 'recoil/User';
 
 const defaultStudy: Study = {
   postId: 0,
@@ -39,11 +41,15 @@ const DetailPage = () => {
   const [studyDetail, setStudyDetail] = useState<Study>(defaultStudy);
   const [studyContent, setStudyContent] = useState('');
 
+  const userInfo = useRecoilValue(UserInfoAtom); // 사용자 이름
+  const [creater, setCreater] = useState<string | undefined>(undefined); // 모집글 작성자 이름
+
   // 스터디 상세 내용 api 호출
   useEffect(() => {
     getStudyDetail(postIdAsNumber).then((res) => {
       setStudyDetail(res?.data);
       setStudyContent(res?.data.content);
+      setCreater(res?.data.memberName);
     });
   }, [postIdAsNumber]);
 
@@ -59,7 +65,7 @@ const DetailPage = () => {
       <TextWrapper>
         <DetailText content={studyContent} />
         {/* 사용자가 작성한 글일때만 보이게 하기 */}
-        <BtnGroup />
+        {creater === userInfo.nickname && <BtnGroup />}
       </TextWrapper>
     </Container>
   );
