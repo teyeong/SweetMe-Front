@@ -26,6 +26,7 @@ const Dropdown = (props: DropdownProps) => {
   const meetingInfo = useRecoilValue(MeetingAtom); // 지원 방법 태그 정보 가져오기
   const contactInfo = useRecoilValue(ContactAtom); // 대면/비대면 태그 정보 가져오기
 
+  // 선택 버튼을 누르면 태그 선택창이 열림
   const handleDropdownClick = (type: string) => {
     if (type === 'category') {
       setIsCategoryOpen(!isCategoryOpen);
@@ -35,6 +36,21 @@ const Dropdown = (props: DropdownProps) => {
       setIsMeetingOpen(!isMeetingOpen);
     }
   };
+
+  // 태그 선택을 마치면 태그 선택창이 닫힘
+  useEffect(() => {
+    if (props.type === 'category') {
+      setIsCategoryOpen(false);
+    } else if (props.type === 'contact') {
+      setIsContactOpen(false);
+    } else if (props.type === 'meeting') {
+      setIsMeetingOpen(false);
+    }
+  }, [
+    categoryInfo.selectedTag,
+    meetingInfo.selectedTag,
+    contactInfo.selectedTag,
+  ]);
 
   // 선택된 태그 이미지 화면에 나타내기
   const getSelectedTagImg = () => {
