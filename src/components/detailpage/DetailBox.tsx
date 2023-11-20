@@ -72,6 +72,7 @@ const DetailBox = ({ study }: { study: Study }) => {
     likePost(postIdAsNumber).then((res) => {
       console.log(res);
     });
+    window.location.reload(); // 새로고침
     return;
   };
 
@@ -80,6 +81,7 @@ const DetailBox = ({ study }: { study: Study }) => {
     deleteLikePost(postIdAsNumber).then((res) => {
       console.log(res);
     });
+    window.location.reload(); // 새로고침
     return;
   };
 

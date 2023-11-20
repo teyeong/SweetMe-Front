@@ -14,7 +14,7 @@ interface formData {
 
 export const submitForm = async (formData: formData) => {
   try {
-    const res = await http.post(`/posts`);
+    const res = await http.post(`/posts`, formData);
     console.log(res);
   } catch (error) {
     console.log(error);

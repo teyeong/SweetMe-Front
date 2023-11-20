@@ -40,7 +40,7 @@ const BtnGroup = () => {
     if (isDelete) {
       // 삭제 api
       deletePost(postIdAsNumber).then((res) => {
-        console.log(res);
+        console.log('삭제완료');
         alert('삭제되었습니다.');
       });
       navigate('/');

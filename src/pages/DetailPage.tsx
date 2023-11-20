@@ -42,7 +42,6 @@ const DetailPage = () => {
   // 스터디 상세 내용 api 호출
   useEffect(() => {
     getStudyDetail(postIdAsNumber).then((res) => {
-      console.log(res?.data);
       setStudyDetail(res?.data);
       setStudyContent(res?.data.content);
     });
