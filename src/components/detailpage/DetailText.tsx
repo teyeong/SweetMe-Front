@@ -13,7 +13,7 @@ export default DetailText;
 const Container = styled.div`
   width: 100%;
   padding: 30px;
-  font-size: 18px;
+  font-size: 20px;
   text-align: left;
 `;
 

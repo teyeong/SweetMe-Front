@@ -120,7 +120,7 @@ const DetailBox = ({ study }: { study: Study }) => {
 
         <DetailList>
           <ListItem>
-            <Title>지원 방법</Title>
+            <Title className="short">지원 방법</Title>
             <TagWrapper>
               <Tag src={contactTag} alt="tag" />
             </TagWrapper>
@@ -130,7 +130,7 @@ const DetailBox = ({ study }: { study: Study }) => {
             <Info>{studyPeriod}</Info>
           </ListItem>
           <ListItem className="last">
-            <Title>대면/비대면</Title>
+            <Title className="long">대면/비대면</Title>
             <TagWrapper>
               <Tag src={meetingTag} alt="tag" />
             </TagWrapper>
@@ -177,6 +177,14 @@ const Title = styled.span`
   font-size: 18px;
   margin-right: 35px;
   white-space: nowrap;
+
+  &.short {
+    margin-right: 45px;
+  }
+
+  &.long {
+    margin-right: 30px;
+  }
 `;
 
 const Info = styled.span`
