@@ -1,18 +1,7 @@
 import { http } from './http';
+import { formData } from '../components/_common/props';
 
-interface formData {
-  title: string;
-  content: string;
-  deadLine: string;
-  startDate: string;
-  endDate: string;
-  people: number;
-  category: string;
-  meeting: string;
-  contact: string;
-}
-
-export const submitForm = async (formData: formData) => {
+export const createPost = async (formData: formData) => {
   try {
     const res = await http.post(`/posts`, formData);
     console.log(res);

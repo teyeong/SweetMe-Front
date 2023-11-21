@@ -21,16 +21,6 @@ export const changeRecruit = async (postId: number) => {
   }
 };
 
-// 글 삭제
-export const deletePost = async (postId: number) => {
-  try {
-    const res = await http.delete(`/posts/${postId}`);
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 // 좋아요 생성
 export const likePost = async (postId: number) => {
   try {
