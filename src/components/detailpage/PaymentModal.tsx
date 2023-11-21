@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
 import kakaopayImg from '../../assets/kakao_pay_button.png';
+import { UserInfoAtom } from 'recoil/User';
+
 import { requestPayment } from 'api/payment';
 
 const PaymentModal = () => {
@@ -9,6 +12,8 @@ const PaymentModal = () => {
   const postIdAsNumber = postId ? parseInt(postId) : 0;
 
   const navigate = useNavigate();
+
+  const userInfo = useRecoilValue(UserInfoAtom);
 
   const { IMP } = window;
   IMP.init('imp75384026');
@@ -19,8 +24,8 @@ const PaymentModal = () => {
       merchant_uid: 'sweetme_1698156130671',
       name: '스윗미 모집글 홍보비',
       amount: 1000,
-      buyer_name: '조민서',
-      buyer_email: 'whalstj2007@naver.com',
+      buyer_name: `${userInfo.nickname}`,
+      buyer_email: `${userInfo.email}`,
     };
     IMP.request_pay(data, callback);
   };
