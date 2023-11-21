@@ -1,37 +1,100 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
+import { LoginStateAtom } from '../../recoil/Login';
 import { Study } from 'components/_common/props';
 import { categories, contact, meeting } from 'components/_common/tags';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 
+import { likePost, deleteLikePost } from 'api/studydetail';
+
 const DetailBox = ({ study }: { study: Study }) => {
+  const loginState = useRecoilValue(LoginStateAtom); // 로그인 여부
+
   const [categoryTag, setCategoryTag] = useState('');
   const [contactTag, setContactTag] = useState('');
   const [meetingTag, setMeetingTag] = useState('');
+  const [people, setPeople] = useState(0);
+  const [studyPeriod, setStudyPeriod] = useState('');
+  const [dday, setDday] = useState(0);
   const [userLiked, setUserLiked] = useState(false);
 
-  // 카테고리 태그 설정
+  const { postId } = useParams();
+  const postIdAsNumber = postId ? parseInt(postId) : 0;
+
+  // 스터디 기간 형식 변경 함수
+  const formatDate = (dateString: string) => {
+    const dateObject = new Date(dateString);
+    return `${dateObject.getFullYear()}.${(dateObject.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}.${dateObject.getDate().toString().padStart(2, '0')}`;
+  };
+
+  // 상세 정보 설정
   useEffect(() => {
+    // 스터디 기간
+    const formattedStartDate = formatDate(study.startDate);
+    const formattedEndDate = formatDate(study.endDate);
+    const formattedStudyPeriod = `${formattedStartDate}-${formattedEndDate}`;
+
+    // 디데이 계산
+    const today = new Date();
+    const parts = study?.deadLine.split('-');
+
+    if (parts) {
+      const year = parseInt(parts[0]);
+      const month = parseInt(parts[1]) - 1;
+      const day = parseInt(parts[2]);
+      const targetDateObj = new Date(year, month, day);
+
+      const timeDiff = targetDateObj.getTime() - today.getTime();
+      const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      setDday(daysRemaining);
+    }
+
+    setStudyPeriod(formattedStudyPeriod);
     setCategoryTag(categories[study.category]);
-  }, [study.category]);
-
-  // 연락 태그 설정
-  useEffect(() => {
     setContactTag(contact[study.contact]);
-  }, [study.contact]);
-
-  // 대면/비대면 태그 설정
-  useEffect(() => {
     setMeetingTag(meeting[study.meeting]);
-  }, [study.meeting]);
+    setPeople(study.people);
+    setUserLiked(study.heart);
+  }, [
+    study.category,
+    study.contact,
+    study.meeting,
+    study.people,
+    study.heart,
+    study.startDate,
+    study.endDate,
+    study.deadLine,
+  ]);
 
-  // 좋아요 여부 설정
-  useEffect(() => {
-    setUserLiked(study.userLiked);
-  }, [study.userLiked]);
+  // 좋아요 API
+  const handleEmptyHeartClick = () => {
+    if (loginState) {
+      likePost(postIdAsNumber).then((res) => {
+        console.log(res);
+      });
+      setTimeout(() => {
+        window.location.reload(); // 새로고침
+      }, 500);
+    } else {
+      alert('로그인 후 이용 가능합니다.');
+    }
 
-  const handleHeartClick = () => {
+    return;
+  };
+
+  // 좋아요 취소 API
+  const handleFullHeartClick = () => {
+    deleteLikePost(postIdAsNumber).then((res) => {
+      console.log(res);
+    });
+    setTimeout(() => {
+      window.location.reload(); // 새로고침
+    }, 500);
     return;
   };
 
@@ -47,27 +110,27 @@ const DetailBox = ({ study }: { study: Study }) => {
           </ListItem>
           <ListItem>
             <Title>모집 마감</Title>
-            <Info>D-7</Info>
+            <Info>{dday > 0 ? `D-${dday}` : `D+${Math.abs(dday)}`}</Info>
           </ListItem>
           <ListItem className="last">
             <Title>모집 인원</Title>
-            <Info>3명</Info>
+            <Info>{people}</Info>
           </ListItem>
         </DetailList>
 
         <DetailList>
           <ListItem>
-            <Title>지원 방법</Title>
+            <Title className="short">지원 방법</Title>
             <TagWrapper>
               <Tag src={contactTag} alt="tag" />
             </TagWrapper>
           </ListItem>
           <ListItem>
             <Title>스터디 기간</Title>
-            <Info>2023.09.24-2023.12.20</Info>
+            <Info>{studyPeriod}</Info>
           </ListItem>
           <ListItem className="last">
-            <Title>대면/비대면</Title>
+            <Title className="long">대면/비대면</Title>
             <TagWrapper>
               <Tag src={meetingTag} alt="tag" />
             </TagWrapper>
@@ -75,10 +138,10 @@ const DetailBox = ({ study }: { study: Study }) => {
         </DetailList>
       </ListWrapper>
       <UserLikedWrapper>
-        {study.userLiked ? (
-          <HeartIcon onClick={handleHeartClick} />
+        {userLiked ? (
+          <HeartIcon onClick={handleFullHeartClick} />
         ) : (
-          <EmptyHeartIcon onClick={handleHeartClick}></EmptyHeartIcon>
+          <EmptyHeartIcon onClick={handleEmptyHeartClick} />
         )}
       </UserLikedWrapper>
     </Container>
@@ -114,6 +177,14 @@ const Title = styled.span`
   font-size: 18px;
   margin-right: 35px;
   white-space: nowrap;
+
+  &.short {
+    margin-right: 45px;
+  }
+
+  &.long {
+    margin-right: 30px;
+  }
 `;
 
 const Info = styled.span`
@@ -139,6 +210,8 @@ const UserLikedWrapper = styled.div`
 const HeartIcon = styled(IoMdHeart)`
   font-size: 30px;
   color: var(--navy);
+  cursor: pointer;
+
   &:hover {
     opacity: 0.6;
   }
@@ -146,4 +219,9 @@ const HeartIcon = styled(IoMdHeart)`
 
 const EmptyHeartIcon = styled(IoMdHeartEmpty)`
   font-size: 30px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--navy);
+  }
 `;

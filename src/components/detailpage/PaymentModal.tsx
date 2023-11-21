@@ -1,6 +1,48 @@
 import styled from 'styled-components';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+
+import kakaopayImg from '../../assets/kakao_pay_button.png';
+import { UserInfoAtom } from 'recoil/User';
+
+import { requestPayment } from 'api/payment';
 
 const PaymentModal = () => {
+  const { postId } = useParams();
+  const postIdAsNumber = postId ? parseInt(postId) : 0;
+
+  const navigate = useNavigate();
+
+  const userInfo = useRecoilValue(UserInfoAtom);
+
+  const { IMP } = window;
+  IMP.init('imp75384026');
+
+  const requestPay = () => {
+    const data = {
+      pg: 'kakaopay.TC0ONETIME',
+      merchant_uid: 'sweetme_1698156130671',
+      name: '스윗미 모집글 홍보비',
+      amount: 1000,
+      buyer_name: `${userInfo.nickname}`,
+      buyer_email: `${userInfo.email}`,
+    };
+    IMP.request_pay(data, callback);
+  };
+
+  const callback = (res: any) => {
+    if (res.success) {
+      requestPayment(postIdAsNumber).then((res) => {
+        console.log(res);
+      });
+      alert('결제 성공');
+      navigate(`/`);
+    } else {
+      console.log(res);
+      alert('결제 실패');
+    }
+  };
+
   return (
     <Wrapper>
       <Header>
@@ -12,7 +54,9 @@ const PaymentModal = () => {
         <Description>
           * 홍보 시 메인화면 상단 배너에 모집글이 게시됩니다.
         </Description>
-        <PaymentButton></PaymentButton>
+        <PaymentButtonWrapper>
+          <PaymentButton src={kakaopayImg} onClick={requestPay} />
+        </PaymentButtonWrapper>
       </Main>
     </Wrapper>
   );
@@ -49,7 +93,10 @@ const Border = styled.div`
   margin: 10px 0;
 `;
 
-const Main = styled.div``;
+const Main = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const PriceTag = styled.p`
   font-size: 16px;
@@ -57,7 +104,21 @@ const PriceTag = styled.p`
 `;
 
 const Description = styled.p`
-  font-size: 12px;
+  font-size: 13px;
+  margin-bottom: 15px;
 `;
 
-const PaymentButton = styled.button``;
+const PaymentButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PaymentButton = styled.img`
+  width: 180px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+`;

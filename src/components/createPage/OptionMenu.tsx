@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useState } from 'react';
 
 import TagList from './TagList';
@@ -65,6 +65,16 @@ const OptionMenu = (prop: OptionMenuProp) => {
 
 export default OptionMenu;
 
+const fadeUp = keyframes`
+  0% {
+    transform: translate3d(0, -20%, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+`;
+
 const Wrapper = styled.div`
   max-width: 750px;
   display: flex;
@@ -78,6 +88,7 @@ const Wrapper = styled.div`
   top: calc(100% + 5px);
   left: 0;
   z-index: 100;
+  animation: ${fadeUp} 0.5s ease-in-out;
 
   &.box {
     min-width: 235px;

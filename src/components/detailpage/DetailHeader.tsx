@@ -9,10 +9,11 @@ import { TagWrapper, Tag } from './tagLayout';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 
 const DetailHeader = ({ study }: { study: Study }) => {
-  const [recruitmentTag, setRecruitmentTag] = useState<string>('');
+  const [memberName, setMemberName] = useState('');
+  const [createdDate, setCreatedDate] = useState('');
+  const [recruitmentTag, setRecruitmentTag] = useState('');
 
   const navigate = useNavigate();
-
   const handleIconClick = () => {
     navigate(-1);
   };
@@ -25,6 +26,22 @@ const DetailHeader = ({ study }: { study: Study }) => {
       setRecruitmentTag(recruitment['False']);
     }
   }, [study.recruitment]);
+
+  // 작성자 이름, 작성 날짜 설정
+  useEffect(() => {
+    if (study.createdDate) {
+      const initialDate = new Date(study.createdDate);
+
+      // 날짜 형식이 유효한지 확인
+      if (!isNaN(initialDate.getTime())) {
+        const formattedDate = initialDate.toISOString().split('T')[0];
+        setCreatedDate(formattedDate);
+      } else {
+        console.error('Invalid date format:', study.createdDate);
+      }
+    }
+    setMemberName(study.memberName);
+  }, [study.memberName, study.createdDate]);
 
   return (
     <Wrapper>
@@ -41,9 +58,9 @@ const DetailHeader = ({ study }: { study: Study }) => {
             <CreaterProfile>
               {/* <img src="유저 프로필" alt="" /> */}
             </CreaterProfile>
-            <CreaterName>스위티</CreaterName>
+            <CreaterName>{memberName}</CreaterName>
           </CreaterInfoWrapper>
-          <CreateDate>2023.09.17</CreateDate>
+          <CreateDate>{createdDate}</CreateDate>
         </CreateInfoWrapper>
       </TopWrapper>
     </Wrapper>
