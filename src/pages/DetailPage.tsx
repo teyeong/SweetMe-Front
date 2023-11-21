@@ -10,29 +10,10 @@ import DetailHeader from 'components/detailpage/DetailHeader';
 import DetailBox from 'components/detailpage/DetailBox';
 import DetailText from 'components/detailpage/DetailText';
 import BtnGroup from 'components/detailpage/BtnGroup';
+import { UserInfoAtom } from 'recoil/User';
+import { defaultStudy } from 'components/_common/props';
 
 import { getStudyDetail } from 'api/studydetail';
-import { UserInfoAtom } from 'recoil/User';
-
-const defaultStudy: Study = {
-  postId: 0,
-  memberName: '',
-  title: '',
-  content: '',
-  createdDate: '',
-  deadLine: '',
-  startDate: '',
-  endDate: '',
-  people: 0,
-  view: 0,
-  recruitment: false,
-  category: '',
-  meeting: '',
-  contact: '',
-  promotion: false,
-  heartCount: 0,
-  heart: false,
-};
 
 const DetailPage = () => {
   const { postId } = useParams();

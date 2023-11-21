@@ -4,7 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
 import DeleteModal from './DeleteModal';
 
-import { changeRecruit, deletePost } from 'api/studydetail';
+import { changeRecruit } from 'api/studydetail';
+import { deletePost } from 'api/delete';
 
 const BtnGroup = () => {
   const [activeBtn, setActiveBtn] = useState(''); // 한번에 하나의 버튼만 활성화
