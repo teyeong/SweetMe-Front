@@ -4,13 +4,17 @@ import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import OptionMenu from './OptionMenu';
-import { categories, meeting, contact } from 'components/_common/tags';
+import { categories, contact, meeting } from 'components/_common/tags';
 import { CategoryAtom, MeetingAtom, ContactAtom } from '../../recoil/Tags';
 
 interface DropdownProps {
   type: string;
   selectedTag?: string;
   setCategory?: React.Dispatch<React.SetStateAction<string>>;
+  // 수정 페이지인 경우 초기 선택 전달받기
+  initialCategory?: string;
+  initialContact?: string;
+  initialMeeting?: string;
 }
 
 interface TagObject {
@@ -55,7 +59,7 @@ const Dropdown = (props: DropdownProps) => {
   // 선택된 태그 이미지 화면에 나타내기
   const getSelectedTagImg = () => {
     // 태그 선택 후 형식
-    const getImageInfo = (object: TagObject, selectedTag: string) => {
+    const getTagImage = (object: TagObject, selectedTag: string) => {
       return (
         <SelectedTagWrapper>
           <i className="fas fa-chevron-down arrow-down" />
@@ -78,19 +82,33 @@ const Dropdown = (props: DropdownProps) => {
 
     switch (props.type) {
       case 'category':
-        content = categoryInfo.isSelected
-          ? getImageInfo(categories, categoryInfo.selectedTag)
-          : getDefault();
+        // 초기 태그 이후에 선택된 태그
+        const selectedCategoryTag = categoryInfo.isSelected
+          ? getTagImage(categories, categoryInfo.selectedTag)
+          : null;
+        // 수정 페이지인 경우 초기 태그를 불러오고 그 이후에 선택한 태그도 반영되도록 함
+        content =
+          props.initialCategory && !categoryInfo.isSelected
+            ? getTagImage(categories, props.initialCategory as string)
+            : selectedCategoryTag || getDefault();
         break;
       case 'contact':
-        content = contactInfo.isSelected
-          ? getImageInfo(contact, contactInfo.selectedTag)
-          : getDefault();
+        const selectedContactTag = contactInfo.isSelected
+          ? getTagImage(contact, contactInfo.selectedTag)
+          : null;
+        content =
+          props.initialContact && !contactInfo.isSelected
+            ? getTagImage(contact, props.initialContact as string)
+            : selectedContactTag || getDefault();
         break;
       case 'meeting':
-        content = meetingInfo.isSelected
-          ? getImageInfo(meeting, meetingInfo.selectedTag)
-          : getDefault();
+        const selectedMeetingTag = meetingInfo.isSelected
+          ? getTagImage(meeting, meetingInfo.selectedTag)
+          : null;
+        content =
+          props.initialMeeting && !meetingInfo.isSelected
+            ? getTagImage(meeting, props.initialMeeting as string)
+            : selectedMeetingTag || getDefault();
         break;
       default:
         content = '';
