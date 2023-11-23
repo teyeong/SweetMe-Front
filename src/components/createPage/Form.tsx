@@ -17,6 +17,12 @@ const initialDate = {
   day: 0,
 };
 
+interface dateType {
+  year: number;
+  month: number;
+  day: number;
+}
+
 // props X -> 작성 페이지
 // props O -> 수정 페이지
 const Form = ({ edit }: { edit?: Study }) => {
@@ -25,20 +31,25 @@ const Form = ({ edit }: { edit?: Study }) => {
 
   const navigate = useNavigate();
 
+  // 선택된 태그 불러오기
   const categoryTag = useRecoilValue(CategoryAtom);
   const meetingTag = useRecoilValue(MeetingAtom);
   const contactTag = useRecoilValue(ContactAtom);
+
+  // 작성 내용 저장
   const [title, setTitle] = useState('');
   const [people, setPeople] = useState(0);
   const [deadline, setDeadline] = useState(initialDate);
   const [startDate, setStartDate] = useState(initialDate);
   const [endDate, setEndDate] = useState(initialDate);
+  const [content, setContent] = useState('');
+
+  // 작성된 날짜를 POST API에 맞는 형식으로 변경한 값
   const [formattedDeadline, setFormattedDeadline] = useState('');
   const [formattedStartDate, setFormattedStartDate] = useState('');
   const [formattedEndDate, setFormattedEndDate] = useState('');
-  const [content, setContent] = useState('');
 
-  // 날짜 형식 변경 함수(년, 월, 일 단위로 쪼개서 저장)
+  // 변경 전 날짜를 년, 월, 일 단위로 쪼개서 저장
   const splitDate = (dateString: string) => {
     const dateObject = new Date(dateString);
 
@@ -48,19 +59,16 @@ const Form = ({ edit }: { edit?: Study }) => {
 
     return { year, month, day };
   };
-  // 수정 페이지인 경우 초기 선택 날짜들을 불러옴
+  // 수정 페이지 -> 초기 작성 내용을 불러옴
   const initialDeadline = splitDate(edit?.deadLine as string);
   const initialStartDate = splitDate(edit?.startDate as string);
   const initialEndDate = splitDate(edit?.endDate as string);
   const initialTitle = edit?.title as string;
   const initialContent = edit?.content as string;
   const initialPeople = edit?.people as number;
-
-  // 현재 날짜 가져오기
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1;
-  const currentDay = currentDate.getDate();
+  const initialCategory = edit?.category as string;
+  const initialContact = edit?.contact as string;
+  const initialMeeting = edit?.meeting as string;
 
   // 제목 저장
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,6 +79,11 @@ const Form = ({ edit }: { edit?: Study }) => {
   const onChangePeople = (e: React.ChangeEvent<HTMLInputElement>) => {
     const peopleAsNum = parseInt(e.target.value);
     setPeople(peopleAsNum);
+  };
+
+  // 글 작성 내용 저장
+  const onChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
   };
 
   // 날짜 저장 공통 함수
@@ -94,22 +107,7 @@ const Form = ({ edit }: { edit?: Study }) => {
     } else if (className.includes('month')) {
       handleDateChange('month', value, setDeadline);
     } else if (className.includes('day')) {
-      const enteredYear = deadline.year;
-      const enteredMonth = deadline.month;
-      const enteredDay = parseInt(value);
-
-      // 모집 마감일을 현재 날짜 이후로 제한
-      if (
-        enteredYear > currentYear ||
-        (enteredYear === currentYear && enteredMonth > currentMonth) ||
-        (enteredYear === currentYear &&
-          enteredMonth === currentMonth &&
-          enteredDay >= currentDay)
-      ) {
-        handleDateChange('day', value, setDeadline);
-      } else {
-        console.error('invalid deadline');
-      }
+      handleDateChange('day', value, setDeadline);
     }
   };
 
@@ -121,22 +119,7 @@ const Form = ({ edit }: { edit?: Study }) => {
     } else if (className.includes('month')) {
       handleDateChange('month', value, setStartDate);
     } else if (className.includes('day')) {
-      const enteredYear = startDate.year;
-      const enteredMonth = startDate.month;
-      const enteredDay = parseInt(value);
-
-      // 스터디 시작 날짜를 현재 날짜 이후로 제한
-      if (
-        enteredYear > currentYear ||
-        (enteredYear === currentYear && enteredMonth > currentMonth) ||
-        (enteredYear === currentYear &&
-          enteredMonth === currentMonth &&
-          enteredDay >= currentDay)
-      ) {
-        handleDateChange('day', value, setStartDate);
-      } else {
-        console.error('invalid start date');
-      }
+      handleDateChange('day', value, setStartDate);
     }
   };
 
@@ -148,26 +131,11 @@ const Form = ({ edit }: { edit?: Study }) => {
     } else if (className.includes('month')) {
       handleDateChange('month', value, setEndDate);
     } else if (className.includes('day')) {
-      const enteredYear = endDate.year;
-      const enteredMonth = endDate.month;
-      const enteredDay = parseInt(value);
-
-      // 스터디 끝 날짜를 스터디 시작 날짜 이후로 제한
-      if (
-        enteredYear > startDate.year ||
-        (enteredYear === startDate.year && enteredMonth > startDate.month) ||
-        (enteredYear === startDate.year &&
-          enteredMonth === startDate.month &&
-          enteredDay >= startDate.day)
-      ) {
-        handleDateChange('day', value, setEndDate);
-      } else {
-        console.error('invalid end date');
-      }
+      handleDateChange('day', value, setEndDate);
     }
   };
 
-  // 날짜 형식 변환
+  // 저장된 날짜 형식을 POST와 PUT API에 맞는 형식으로 변환
   const formatDate = (year: number, month: number, day: number) => {
     return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(
       2,
@@ -197,20 +165,35 @@ const Form = ({ edit }: { edit?: Study }) => {
     setFormattedEndDate(formattedEndDate);
   }, [deadline, startDate, endDate]);
 
-  // 글 작성 내용 저장
-  const onChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+  // 수정 페이지 -> 날짜 수정 함수
+  // 년, 월, 일 중 하나라도 변경된 경우
+  const handleEditDate = (dateType: dateType, initialDateType: dateType) => {
+    return dateType.year !== 0
+      ? formatDate(
+          dateType.year,
+          dateType.month || initialDateType.month,
+          dateType.day || initialDateType.day,
+        )
+      : formatDate(
+          initialDateType.year,
+          dateType.month || initialDateType.month,
+          dateType.day || initialDateType.day,
+        );
   };
 
   // 완료 버튼 클릭 시
+  // 작성 페이지인 경우 edit에 false를 전달받고 수정 페이지인 경우 edit에 true를 전달받음
   const handleSubmit = (edit: boolean) => {
+    // 수정을 안 한 경우 -> 기존에 썼던 정보를 다시 제출
+    // 수정을 한 경우 -> 수정된 정보를 제출
     const formData = {
       title: edit ? (title !== '' ? title : initialTitle) : title,
       content: edit ? (content !== '' ? content : initialContent) : content,
       deadLine: edit
         ? formattedDeadline !== '0-00-00 00:00:00'
-          ? formattedDeadline // 비어있지 않으면
-          : // 비어 있으면
+          ? // 년, 월, 일 중 하나라도 변경된 경우
+            handleEditDate(deadline, initialDeadline)
+          : // 년, 월, 일 중 하나도 변경되지 않은 경우
             formatDate(
               initialDeadline.year,
               initialDeadline.month,
@@ -219,7 +202,7 @@ const Form = ({ edit }: { edit?: Study }) => {
         : formattedDeadline,
       startDate: edit
         ? formattedStartDate !== '0-00-00 00:00:00'
-          ? formattedStartDate
+          ? handleEditDate(startDate, initialStartDate)
           : formatDate(
               initialStartDate.year,
               initialStartDate.month,
@@ -228,7 +211,7 @@ const Form = ({ edit }: { edit?: Study }) => {
         : formattedStartDate,
       endDate: edit
         ? formattedEndDate !== '0-00-00 00:00:00'
-          ? formattedEndDate
+          ? handleEditDate(endDate, initialEndDate)
           : formatDate(
               initialEndDate.year,
               initialEndDate.month,
@@ -236,9 +219,21 @@ const Form = ({ edit }: { edit?: Study }) => {
             )
         : formattedEndDate,
       people: edit ? (people !== 0 ? people : initialPeople) : people,
-      category: categoryTag.selectedTag,
-      meeting: meetingTag.selectedTag,
-      contact: contactTag.selectedTag,
+      category: edit
+        ? categoryTag.selectedTag !== ''
+          ? categoryTag.selectedTag
+          : initialCategory
+        : categoryTag.selectedTag,
+      meeting: edit
+        ? meetingTag.selectedTag !== ''
+          ? meetingTag.selectedTag
+          : initialMeeting
+        : meetingTag.selectedTag,
+      contact: edit
+        ? contactTag.selectedTag !== ''
+          ? contactTag.selectedTag
+          : initialContact
+        : contactTag.selectedTag,
     };
 
     {
@@ -247,16 +242,15 @@ const Form = ({ edit }: { edit?: Study }) => {
             // 스터디 내용 수정 PUT API
             console.log(res);
             console.log(postIdAsNumber, formData);
-            alert('모집글 수정이 완료되었습니다!');
-            navigate('/');
+            navigate(`/detail/${postIdAsNumber}`);
           })
         : createPost(formData).then((res) => {
             //스터디 작성 내용 POST API
             console.log(formData);
             alert('모집글 작성이 완료되었습니다!');
-            navigate('/');
           });
     }
+    navigate(`/`);
   };
 
   return (
@@ -274,7 +268,7 @@ const Form = ({ edit }: { edit?: Study }) => {
           <InputList>
             <InputListItem>
               <InputListTitle className="default">카테고리</InputListTitle>
-              <Dropdown type="category" initialCategory={edit?.category} />
+              <Dropdown type="category" initialCategory={initialCategory} />
             </InputListItem>
             <InputListItem>
               <InputListTitle className="default">모집 마감</InputListTitle>
@@ -392,11 +386,11 @@ const Form = ({ edit }: { edit?: Study }) => {
           <InputList>
             <InputListItem>
               <InputListTitle className="default">지원 방법</InputListTitle>
-              <Dropdown type="contact" initialContact={edit?.contact} />
+              <Dropdown type="contact" initialContact={initialContact} />
             </InputListItem>
             <InputListItem>
               <InputListTitle className="short">대면/비대면</InputListTitle>
-              <Dropdown type="meeting" initialMeeting={edit?.meeting} />
+              <Dropdown type="meeting" initialMeeting={initialMeeting} />
             </InputListItem>
           </InputList>
         </MainRight>

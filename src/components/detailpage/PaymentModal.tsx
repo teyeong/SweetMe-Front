@@ -1,11 +1,22 @@
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useState } from 'react';
 
 import kakaopayImg from '../../assets/kakao_pay_button.png';
-import { UserInfoAtom } from 'recoil/User';
 
 import { requestPayment } from 'api/payment';
+
+interface PaymentInfo {
+  postId: number | 0;
+  pg: string | '';
+  merchant_uid: string | '';
+  name: string | '';
+  amount: number | 0;
+  buyer_name: string | '';
+  buyer_email: string | '';
+  promotion: boolean | false;
+  createdDate: string | '';
+}
 
 const PaymentModal = () => {
   const { postId } = useParams();
@@ -13,28 +24,31 @@ const PaymentModal = () => {
 
   const navigate = useNavigate();
 
-  const userInfo = useRecoilValue(UserInfoAtom);
+  const [requestPayResponse, setRequestPayResponse] = useState<PaymentInfo>();
 
   const { IMP } = window;
-  IMP.init('imp75384026');
+  IMP.init('imp12737001');
 
   const requestPay = () => {
+    // 주문정보 생성 & 결과 저장
+    requestPayment(postIdAsNumber).then((res) => {
+      setRequestPayResponse(res?.data as PaymentInfo);
+    });
+
     const data = {
       pg: 'kakaopay.TC0ONETIME',
-      merchant_uid: 'sweetme_1698156130671',
+      merchant_uid: `${requestPayResponse?.merchant_uid}`,
       name: '스윗미 모집글 홍보비',
       amount: 1000,
-      buyer_name: `${userInfo.nickname}`,
-      buyer_email: `${userInfo.email}`,
+      buyer_name: `${requestPayResponse?.buyer_name}`,
+      buyer_email: `${requestPayResponse?.buyer_email}`,
     };
+    // 결제 요청
     IMP.request_pay(data, callback);
   };
 
   const callback = (res: any) => {
     if (res.success) {
-      requestPayment(postIdAsNumber).then((res) => {
-        console.log(res);
-      });
       alert('결제 성공');
       navigate(`/`);
     } else {
