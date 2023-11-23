@@ -5,7 +5,7 @@ import { formData } from '../components/_common/props';
 export const editPost = async (postId: number, formData: formData) => {
   try {
     const res = await http.put(`/posts/${postId}`, formData);
-    return res;
+    console.log('수정', res);
   } catch (error) {
     console.log(error);
   }

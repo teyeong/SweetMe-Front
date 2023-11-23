@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import Dropdown from './Dropdown';
@@ -22,6 +22,8 @@ const initialDate = {
 const Form = ({ edit }: { edit?: Study }) => {
   const { postId } = useParams();
   const postIdAsNumber = postId ? parseInt(postId) : 0;
+
+  const navigate = useNavigate();
 
   const categoryTag = useRecoilValue(CategoryAtom);
   const meetingTag = useRecoilValue(MeetingAtom);
@@ -50,6 +52,9 @@ const Form = ({ edit }: { edit?: Study }) => {
   const initialDeadline = splitDate(edit?.deadLine as string);
   const initialStartDate = splitDate(edit?.startDate as string);
   const initialEndDate = splitDate(edit?.endDate as string);
+  const initialTitle = edit?.title as string;
+  const initialContent = edit?.content as string;
+  const initialPeople = edit?.people as number;
 
   // 현재 날짜 가져오기
   const currentDate = new Date();
@@ -169,6 +174,7 @@ const Form = ({ edit }: { edit?: Study }) => {
       '0',
     )} 00:00:00`;
   };
+
   useEffect(() => {
     const formattedDeadline = formatDate(
       deadline.year,
@@ -199,12 +205,37 @@ const Form = ({ edit }: { edit?: Study }) => {
   // 완료 버튼 클릭 시
   const handleSubmit = (edit: boolean) => {
     const formData = {
-      title: title,
-      content: content,
-      deadLine: formattedDeadline,
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-      people: people,
+      title: edit ? (title !== '' ? title : initialTitle) : title,
+      content: edit ? (content !== '' ? content : initialContent) : content,
+      deadLine: edit
+        ? formattedDeadline !== '0-00-00 00:00:00'
+          ? formattedDeadline // 비어있지 않으면
+          : // 비어 있으면
+            formatDate(
+              initialDeadline.year,
+              initialDeadline.month,
+              initialDeadline.day,
+            )
+        : formattedDeadline,
+      startDate: edit
+        ? formattedStartDate !== '0-00-00 00:00:00'
+          ? formattedStartDate
+          : formatDate(
+              initialStartDate.year,
+              initialStartDate.month,
+              initialStartDate.day,
+            )
+        : formattedStartDate,
+      endDate: edit
+        ? formattedEndDate !== '0-00-00 00:00:00'
+          ? formattedEndDate
+          : formatDate(
+              initialEndDate.year,
+              initialEndDate.month,
+              initialEndDate.day,
+            )
+        : formattedEndDate,
+      people: edit ? (people !== 0 ? people : initialPeople) : people,
       category: categoryTag.selectedTag,
       meeting: meetingTag.selectedTag,
       contact: contactTag.selectedTag,
@@ -214,11 +245,16 @@ const Form = ({ edit }: { edit?: Study }) => {
       edit
         ? editPost(postIdAsNumber, formData).then((res) => {
             // 스터디 내용 수정 PUT API
-            console.log('수정', res);
+            console.log(res);
+            console.log(postIdAsNumber, formData);
+            alert('모집글 수정이 완료되었습니다!');
+            navigate('/');
           })
         : createPost(formData).then((res) => {
             //스터디 작성 내용 POST API
-            console.log('작성', res);
+            console.log(formData);
+            alert('모집글 작성이 완료되었습니다!');
+            navigate('/');
           });
     }
   };
@@ -228,7 +264,7 @@ const Form = ({ edit }: { edit?: Study }) => {
       <Title
         type="text"
         placeholder="제목을 입력하세요"
-        value={title || edit?.title}
+        value={title || initialTitle}
         onChange={onChangeTitle}
         required
       />
@@ -343,7 +379,7 @@ const Form = ({ edit }: { edit?: Study }) => {
               <NumInput
                 type="number"
                 onChange={onChangePeople}
-                value={people || edit?.people}
+                value={people || initialPeople}
                 min="1"
                 required
               />
@@ -369,7 +405,7 @@ const Form = ({ edit }: { edit?: Study }) => {
       <TextInput
         placeholder="내용을 입력하세요"
         onChange={onChangeContent}
-        value={content || edit?.content}
+        value={content || initialContent}
         wrap="hard"
         required
       />
