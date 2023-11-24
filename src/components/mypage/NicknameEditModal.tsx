@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 
 import { ModalProps } from '../_common/props';
 import { UserInfoAtom } from 'recoil/User';
-import { patchNickname } from 'api/user';
+import { patchNickname, unlinkUser } from 'api/user';
 
 const NicknameEditModal = ({ setIsModalOpen }: ModalProps) => {
   const [userInfo, setUserInfo] = useRecoilState(UserInfoAtom);
@@ -27,6 +27,11 @@ const NicknameEditModal = ({ setIsModalOpen }: ModalProps) => {
     // 새로고침 방지
     e.preventDefault();
 
+    if (!nickname) {
+      alert('닉네임을 입력해 주세요');
+      return;
+    }
+
     // 닉네임 patch api 호출
     const res = await patchNickname(nickname);
     console.log('닉변', res);
@@ -40,21 +45,28 @@ const NicknameEditModal = ({ setIsModalOpen }: ModalProps) => {
     }
   };
 
-  const handleWithdrawalClick = () => {
+  const handleWithdrawalClick = async () => {
     // 회원 탈퇴 api 호출
+    const res = await unlinkUser();
+    if (res?.status === 200) {
+      window.localStorage.clear();
+      window.location.href = '/';
+    }
   };
 
   return (
     <Div>
       <Container>
-        <XBtn onClick={() => setIsModalOpen(false)}>X</XBtn>
+        <XBtn>
+          <div onClick={() => setIsModalOpen(false)}>X</div>
+        </XBtn>
         <p>변경할 닉네임을 입력해주세요!</p>
-        <Form onSubmit={handleSubmit}>
+        <Form>
           <input type="text" value={nickname} onChange={handleInputChange} />
-          <button type="submit">저장</button>
-          <button className="withdrawal" onClick={handleWithdrawalClick}>
+          <button onClick={handleSubmit}>저장</button>
+          {/* <button className="withdrawal" onClick={handleWithdrawalClick}>
             회원 탈퇴
-          </button>
+          </button> */}
         </Form>
       </Container>
     </Div>
@@ -90,7 +102,7 @@ const Container = styled.div`
   }
 `;
 
-const XBtn = styled.button`
+const XBtn = styled.div`
   color: black;
   font-size: 32px;
   font-style: normal;
@@ -100,15 +112,21 @@ const XBtn = styled.button`
   justify-content: end;
   width: 100%;
   padding: 15px;
-  cursor: pointer;
+  div {
+    cursor: pointer;
+  }
 `;
 
-const Form = styled.form`
+// 탈퇴 버튼 있을 때 style 주석 처리
+const Form = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 200px;
-  margin-bottom: 25px;
+  //height: 200px;
+  height: 135px;
+  //margin-bottom: 25px;
+  // 탈퇴 버튼 없을 때 style 추가
+  margin-top: 10px;
   justify-content: space-between;
   input {
     border-radius: 90px;
