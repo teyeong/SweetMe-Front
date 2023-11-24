@@ -6,6 +6,7 @@ import StudyDetail from 'components/mainpage/StudyDetail';
 import book from '../../assets/mypage/book-icon.svg';
 import { Study } from 'components/_common/props';
 import Loader from 'components/_common/Loader';
+import { getLikedPosts, getMyPosts } from 'api/study';
 
 type StudyListProps = {
   type: string;
@@ -14,27 +15,40 @@ type StudyListProps = {
 const StudyList = ({ type }: StudyListProps) => {
   const [title, setTitle] = useState(''); // 작성, 좋아요 중 하나
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Study[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false); // 데이터 가져오기 로딩
-  const [itemList, setItemList] = useState(data.slice(0, 24)); // 데이터 24개씩 자르기
+  const [itemList, setItemList] = useState<Study[]>([]); // 데이터 24개씩 자르기
   const [isLeft, setIsLeft] = useState<boolean>(false); // 남은 데이터 유무
   const [index, setIndex] = useState<number>(24); // 자른 데이터 인덱스
 
-  useEffect(() => {
-    const getData = async () => {
-      // /post/heart
-      // /post/member
-    };
-  });
+  const getPostData = async () => {
+    const res = await getMyPosts();
+    if (res?.status === 200) {
+      setData(res.data);
+      setItemList(res.data.slice(0, 24));
+    }
+  };
+
+  const getLikeData = async () => {
+    const res = await getLikedPosts();
+    if (res?.status === 200) {
+      setData(res.data);
+      setItemList(res.data.slice(0, 24));
+    }
+  };
 
   useEffect(() => {
+    setIsLoading(true);
     if (type === 'POST') {
       setTitle('작성');
       // 작성 글 목록 불러오기 api
+      getPostData();
     } else if (type === 'LIKE') {
       setTitle('좋아요');
       // 좋아요 글 목록 불러오기 api
+      getLikeData();
     }
+    setIsLoading(false);
   }, [type]);
 
   useEffect(() => {
@@ -59,7 +73,7 @@ const StudyList = ({ type }: StudyListProps) => {
 
   return (
     <Div>
-      {/* <TitleDiv>
+      <TitleDiv>
         <img src={book} />
         <p>{title}한 글 목록</p>
       </TitleDiv>
@@ -72,7 +86,7 @@ const StudyList = ({ type }: StudyListProps) => {
           })}
           {isLeft && <MoreBtn onClick={handleMoreClick}>더보기</MoreBtn>}
         </ItemDiv>
-      )} */}
+      )}
     </Div>
   );
 };
@@ -82,7 +96,7 @@ const Div = styled.div`
   padding: 20px;
 `;
 
-const TitleDiv = styled.p`
+const TitleDiv = styled.div`
   display: flex;
   img {
     width: 32px;
