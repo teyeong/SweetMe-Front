@@ -13,7 +13,9 @@ const LoginModal = ({ setIsModalOpen }: ModalProps) => {
   return (
     <Div>
       <Container>
-        <XBtn onClick={() => setIsModalOpen(false)}>X</XBtn>
+        <XBtn>
+          <div onClick={() => setIsModalOpen(false)}>X</div>
+        </XBtn>
         <p>
           안녕하세요!
           <br />
@@ -60,7 +62,7 @@ const Container = styled.div`
   }
 `;
 
-const XBtn = styled.button`
+const XBtn = styled.div`
   color: black;
   font-size: 32px;
   font-style: normal;
@@ -70,7 +72,9 @@ const XBtn = styled.button`
   justify-content: end;
   width: 100%;
   padding: 15px;
-  cursor: pointer;
+  div {
+    cursor: pointer;
+  }
 `;
 
 export default LoginModal;
