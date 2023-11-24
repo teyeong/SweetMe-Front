@@ -17,7 +17,7 @@ export const LoginAtom = atom<Login>({
     email: '',
     accessToken: '',
     refreshToken: '',
-    isFirst: false,
+    isfirst: false,
   },
   effects_UNSTABLE: [persistAtom],
 });

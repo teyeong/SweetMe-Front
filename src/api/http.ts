@@ -6,7 +6,6 @@ export const http = axios.create({
 });
 
 const token = window.localStorage.getItem('accessToken') ?? false;
-//alert(token);
 
 http.defaults.headers.common['Authorization'] = token
   ? `Bearer ${token}`

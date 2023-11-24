@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
-import defaultProfile from '../../assets/defaultProfile.jpg';
+import defaultProfile from '../../assets/default_image.png';
 import post from '../../assets/mypage/post-icon.svg';
 import heart from '../../assets/mypage/heart-icon.svg';
 import settings from '../../assets/mypage/settings-icon.svg';
@@ -35,7 +35,6 @@ const MenuBar = () => {
     // 로그아웃 api
     const res = await logout();
     if (res?.status === 200) {
-      setActiveIndex(-1);
       window.localStorage.clear();
       window.location.href = '/';
     }
@@ -94,7 +93,9 @@ const MenuBar = () => {
           </ItemDiv>
         </MenuDiv>
         <UserDiv>
-          <div>{/* <Img /> 사용자 프로필 이미지 src로 받아서 사용 */}</div>
+          <div>
+            <Img src={userInfo.profileImage} />
+          </div>
           <p>{userInfo.nickname}</p>
         </UserDiv>
       </Div>

@@ -1,6 +1,6 @@
 import { http } from './http';
 
-export const filter = async (url: string) => {
+export const getFilter = async (url: string) => {
   try {
     const res = await http.get(url);
     return res;
@@ -9,12 +9,30 @@ export const filter = async (url: string) => {
   }
 };
 
-export const promo = async () => {
+export const getPromo = async () => {
   try {
     const res = await http.get('/posts/promotion');
-    console.log('프로모', res.data);
     return res;
   } catch (err) {
     console.error(err);
+  }
+};
+
+export const getMyPosts = async () => {
+  try {
+    const res = await http.get('/posts/member');
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getLikedPosts = async () => {
+  try {
+    const res = await http.get('/posts/heart');
+    console.log(res);
+    return res;
+  } catch (err) {
+    console.log(err);
   }
 };

@@ -6,13 +6,13 @@ import { LoginAtom, LoginStateAtom } from '../../recoil/Login';
 import { UserInfoAtom } from 'recoil/User';
 
 import logo from '../../assets/logo.svg';
-import defaultProfile from '../../assets/defaultProfile.jpg';
+import defaultProfile from '../../assets/default_image.png';
 import LoginModal from './LoginModal';
 import NicknameModal from './NicknameModal';
 import { getUserInfo } from 'api/user';
 
 const Header = () => {
-  const [loginState, setLoginState] = useRecoilState(LoginStateAtom); // 로그인 여부
+  const loginState = useRecoilValue(LoginStateAtom); // 로그인 여부
   const loginInfo = useRecoilValue(LoginAtom); // 로그인 정보
   const [userInfo, setUserInfo] = useRecoilState(UserInfoAtom); // 유저 정보
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // 로그인 모달 열림 유무
@@ -22,7 +22,8 @@ const Header = () => {
 
   // 처음 가입한 사용자인지 판단 -> 닉네임 설정 모달 열기
   useEffect(() => {
-    if (loginInfo.isFirst) {
+    console.log('로그인 정보', loginInfo);
+    if (loginInfo.isfirst) {
       setIsNicknameModalOpen(true);
     }
   }, []);
@@ -31,7 +32,7 @@ const Header = () => {
     if (loginState) {
       navigate('/create');
     } else {
-      alert('로그인 후 이용 가능합니다.');
+      alert('로그인이 필요합니다.');
     }
   };
 
@@ -52,16 +53,37 @@ const Header = () => {
         const data = res?.data;
         console.log('유저 정보', data);
         if (data) {
-          setUserInfo({
-            nickname: data.nickname,
-            email: data.email,
-            profileImage: data.profileImage,
-          });
+          if (data.profileImage.startsWith('http://k.kakaocdn.net')) {
+            setUserInfo({
+              nickname: data.nickname,
+              email: data.email,
+              profileImage: data.profileImage,
+            });
+          } else {
+            const imgID = extractID(data.profileImage);
+            const imgURL = `https://drive.google.com/uc?export=view&id=${imgID}`;
+            setUserInfo({
+              nickname: data.nickname,
+              email: data.email,
+              profileImage: imgURL,
+            });
+          }
         }
       };
       getUser();
     }
   }, []);
+
+  function extractID(url: string): string | null {
+    const regex = /\/file\/d\/([^/]+)\//;
+    const match = url.match(regex);
+
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      return null;
+    }
+  }
 
   return (
     <>

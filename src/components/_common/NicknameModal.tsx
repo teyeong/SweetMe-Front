@@ -10,7 +10,7 @@ import { patchNickname } from 'api/user';
 const NicknameModal = ({ setIsModalOpen }: ModalProps) => {
   const [login, setLogin] = useRecoilState(LoginAtom);
   const [userInfo, setUserInfo] = useRecoilState(UserInfoAtom);
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(userInfo.nickname);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -27,12 +27,17 @@ const NicknameModal = ({ setIsModalOpen }: ModalProps) => {
     // 새로고침 방지
     e.preventDefault();
 
+    if (!nickname) {
+      alert('닉네임을 입력해 주세요');
+      return;
+    }
+
     // 닉네임 patch api 호출
     const res = await patchNickname(nickname);
     if (res?.status === 200) {
       setLogin({
         ...login,
-        isFirst: false,
+        isfirst: false,
       });
       setUserInfo({
         ...userInfo,
@@ -46,7 +51,9 @@ const NicknameModal = ({ setIsModalOpen }: ModalProps) => {
   return (
     <Div>
       <Container>
-        <XBtn onClick={() => setIsModalOpen(false)}>X</XBtn>
+        <XBtn>
+          <div onClick={() => setIsModalOpen(false)}>X</div>
+        </XBtn>
         <p>
           닉네임을 입력해주세요!
           <br />
@@ -91,7 +98,7 @@ const Container = styled.div`
   }
 `;
 
-const XBtn = styled.button`
+const XBtn = styled.div`
   color: black;
   font-size: 32px;
   font-style: normal;
@@ -101,7 +108,9 @@ const XBtn = styled.button`
   justify-content: end;
   width: 100%;
   padding: 15px;
-  cursor: pointer;
+  div {
+    cursor: pointer;
+  }
 `;
 
 const Form = styled.form`

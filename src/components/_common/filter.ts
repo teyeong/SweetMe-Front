@@ -9,7 +9,6 @@ export const sort = {
 } as FilterObject;
 
 export const recuitment = {
-  전체: 'null',
   '모집 중': '0',
   '모집 완료': '1',
 } as FilterObject;

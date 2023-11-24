@@ -44,3 +44,12 @@ export const patchNickname = async (nickname: string) => {
     console.log(err);
   }
 };
+
+export const unlinkUser = async () => {
+  try {
+    const res = await http.delete('/kakao/unlink');
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+};

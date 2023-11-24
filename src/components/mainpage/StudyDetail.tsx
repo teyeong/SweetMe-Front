@@ -5,13 +5,14 @@ import React, { useState, useEffect } from 'react';
 import { categories } from '../_common/tags';
 import { Study } from '../_common/props';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
+import { likePost, deleteLikePost } from 'api/studydetail';
 
 const StudyDetail = ({ study }: { study: Study }) => {
   const navigate = useNavigate();
 
-  const [tagImg, setTagImg] = useState<string>('');
-
-  const [dday, setDday] = useState<number | null>(null);
+  const [tagImg, setTagImg] = useState<string>(''); // 태그 이미지
+  const [dday, setDday] = useState<number | null>(null); // 디데이 계산
+  const [userLiked, setUserLiked] = useState(study.heart); //  좋아요 여부
 
   // 디데이 계산
   useEffect(() => {
@@ -29,7 +30,7 @@ const StudyDetail = ({ study }: { study: Study }) => {
 
       setDday(daysRemaining);
     }
-  }, [study?.deadLine]);
+  }, [study.deadLine]);
 
   // 스터디 상세 페이지로 이동
   const handleStudyClick = () => {
@@ -39,15 +40,34 @@ const StudyDetail = ({ study }: { study: Study }) => {
   // 태그 이미지 설정
   useEffect(() => {
     setTagImg(categories[study?.category]);
-  }, [study?.category]);
+  }, [study.category]);
 
-  const handleLikeClick = () => {
-    // 좋아요 버튼 api 호출
+  const handleLikeClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+    // detail 페이지 이동 막기
+    e.stopPropagation();
+
+    if (userLiked) {
+      // 좋아요 취소 호출
+      const res = await deleteLikePost(study.postId);
+      if (res) {
+        setUserLiked(!userLiked);
+      } else {
+        alert('로그인이 필요합니다.');
+      }
+    } else {
+      // 좋아요 등록 호출
+      const res = await likePost(study.postId);
+      if (res) {
+        setUserLiked(!userLiked);
+      } else {
+        alert('로그인이 필요합니다.');
+      }
+    }
   };
 
   return (
     <Div onClick={handleStudyClick}>
-      <EndDiv className={study?.recruitment ? 'end' : ''}>
+      <EndDiv className={study.recruitment ? 'end' : ''}>
         <div>
           모집
           <br />
@@ -65,19 +85,21 @@ const StudyDetail = ({ study }: { study: Study }) => {
           </DdayText>
         )}
         <div>
-          <p>♥{study?.heartCount}</p>
-          <p>👀{study?.view}</p>
+          <p>♥{study.heartCount}</p>
+          <p>👀{study.view}</p>
         </div>
       </FirstDiv>
-      <TitleText>{study?.title}</TitleText>
+      <TitleText>{study.title}</TitleText>
       <LastDiv>
         <Tag src={tagImg}></Tag>
-        {study?.heart ? (
-          <LikeBtn onClick={handleLikeClick} />
+        {userLiked ? (
+          <LikeBtn onClick={handleLikeClick}>
+            <IoMdHeart className="icon full" />
+          </LikeBtn>
         ) : (
-          <EmptyLikeBtn onClick={handleLikeClick}>
+          <LikeBtn onClick={handleLikeClick}>
             <IoMdHeartEmpty className="icon" />
-          </EmptyLikeBtn>
+          </LikeBtn>
         )}
       </LastDiv>
     </Div>
@@ -171,27 +193,21 @@ const Tag = styled.img`
   width: 100px;
 `;
 
-const LikeBtn = styled(IoMdHeart)`
-  font-size: 30px;
-  margin: 0;
-  color: rgb(255, 0, 0);
-  :hover {
-    color: rgba(255, 0, 0, 0.5);
-  }
-`;
-
-const EmptyLikeBtn = styled.div`
+const LikeBtn = styled.div`
   margin: 0;
   display: block;
   font-size: 30px;
   width: 30px;
   margin: 0;
   :hover {
-    color: rgba(255, 0, 0, 0.5);
+    opacity: 0.6;
   }
   .icon {
     display: flex;
     align-items: center;
+  }
+  .full {
+    color: var(--navy);
   }
 `;
 
