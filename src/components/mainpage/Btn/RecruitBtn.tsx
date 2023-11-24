@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { StatusBtn } from '../../_common/props';
 
 const RecruitBtn = ({ onBtnChange }: StatusBtn) => {
-  const [selectedBtn, setSelectedBtn] = useState<string>('전체');
+  const [selectedBtn, setSelectedBtn] = useState<string>('모집 중');
 
   const handleBtnClick = (status: string) => {
     setSelectedBtn(status);
@@ -13,7 +13,7 @@ const RecruitBtn = ({ onBtnChange }: StatusBtn) => {
 
   return (
     <Div>
-      {['전체', '모집 중', '모집 완료'].map((status) => (
+      {['모집 중', '모집 완료'].map((status) => (
         <Btn
           key={status}
           className={`button ${selectedBtn === status ? 'active' : ''}`}

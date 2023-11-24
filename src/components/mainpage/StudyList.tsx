@@ -10,11 +10,12 @@ import { Study } from 'components/_common/props';
 import { sort, recuitment } from 'components/_common/filter';
 import Loader from 'components/_common/Loader';
 
-import { filter } from 'api/study';
+import { getFilter } from 'api/study';
 
 const StudyList = () => {
   // 태그 상태 저장 useState
-  const [selectedRecruitBtn, setSelectedRecruitBtn] = useState<string>('전체');
+  const [selectedRecruitBtn, setSelectedRecruitBtn] =
+    useState<string>('모집 중');
   const [selectedSortBtn, setSelectedSortBtn] = useState<string>('최신순');
   const [selectedTagBtn, setSelectedTagBtn] = useState<string>('');
 
@@ -52,21 +53,14 @@ const StudyList = () => {
     let apiURL = `/posts/filtering?sort=${sortValue}`;
     setIsLoading(true);
     const getData = async () => {
-      if (recuitValue === 'null') {
-        if (selectedTagBtn) {
-          // recuitment 없음 & tag 있음 api 주소
-          apiURL += `&category=${selectedTagBtn}`;
-        }
+      if (selectedTagBtn) {
+        // recuitment 있음 & tag 있음 api 주소
+        apiURL += `&category=${selectedTagBtn}&recruitment=${recuitValue}`;
       } else {
-        if (selectedTagBtn) {
-          // recuitment 있음 & tag 있음 api 주소
-          apiURL += `&category=${selectedTagBtn}&recruitment=${recuitValue}`;
-        } else {
-          // recuitment 있음 & tag 없음 api 주소
-          apiURL += `&recruitment=${recuitValue}`;
-        }
+        // recuitment 있음 & tag 없음 api 주소
+        apiURL += `&recruitment=${recuitValue}`;
       }
-      const res = await filter(apiURL);
+      const res = await getFilter(apiURL);
       setData(res?.data);
       setItemList(res?.data.slice(0, 24));
       setIsLoading(false);
