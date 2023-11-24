@@ -35,9 +35,7 @@ const StudyList = () => {
 
   const handleMoreClick = () => {
     if (index + 24 > data.length) {
-      console.log(data.length);
       setItemList(itemList.concat(data.slice(index, data.length)));
-      console.log(itemList.concat(data.slice(index, data.length)));
       setIsLeft(false);
     } else {
       setItemList(itemList.concat(data.slice(index, index + 24)));
@@ -47,7 +45,6 @@ const StudyList = () => {
 
   // 데이터 불러오기 api 호출
   useEffect(() => {
-    console.log(selectedRecruitBtn, selectedSortBtn, selectedTagBtn);
     const sortValue = sort[selectedSortBtn];
     const recuitValue = recuitment[selectedRecruitBtn];
     let apiURL = `/posts/filtering?sort=${sortValue}`;
@@ -64,7 +61,6 @@ const StudyList = () => {
       setData(res?.data);
       setItemList(res?.data.slice(0, 24));
       setIsLoading(false);
-      console.log(res?.data);
     };
     getData();
   }, [selectedRecruitBtn, selectedSortBtn, selectedTagBtn]);

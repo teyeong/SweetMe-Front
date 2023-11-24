@@ -34,13 +34,11 @@ const NicknameEditModal = ({ setIsModalOpen }: ModalProps) => {
 
     // 닉네임 patch api 호출
     const res = await patchNickname(nickname);
-    console.log('닉변', res);
     if (res?.status === 200) {
       setUserInfo({
         ...userInfo,
         nickname: nickname,
       });
-      console.log(nickname);
       setIsModalOpen(false);
     }
   };

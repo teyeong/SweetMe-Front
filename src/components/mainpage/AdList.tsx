@@ -31,10 +31,6 @@ const AdList = () => {
   useEffect(() => {
     const windowWidth = window.innerWidth;
 
-    if (data.length < 4) {
-      setItemCnt(4);
-      return;
-    }
     if (windowWidth <= 660) {
       setItemCnt(1);
     } else if (windowWidth <= 990) {
