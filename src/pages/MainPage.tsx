@@ -1,7 +1,17 @@
-import React from 'react';
+import Header from 'components/_common/Header';
+import Footer from 'components/_common/Footer';
+import AdList from 'components/mainpage/AdList';
+import StudyList from 'components/mainpage/StudyList';
 
 const MainPage = () => {
-  return <div>메인 페이지</div>;
+  return (
+    <>
+      <Header />
+      <AdList />
+      <StudyList />
+      <Footer />
+    </>
+  );
 };
 
 export default MainPage;
