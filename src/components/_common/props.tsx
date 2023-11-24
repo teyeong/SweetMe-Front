@@ -49,7 +49,7 @@ export type Login = {
   email: string;
   accessToken: string;
   refreshToken: string;
-  isFirst: boolean;
+  isfirst: boolean;
 };
 
 export type StatusBtn = {
