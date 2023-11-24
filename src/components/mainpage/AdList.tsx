@@ -1,29 +1,29 @@
 import { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import styled from 'styled-components';
-//import data from './ad-dummy-data.json';
 import StudyDetail from './StudyDetail';
 import Loader from '../_common/Loader';
-import { promo } from 'api/study';
+import { getPromo } from 'api/study';
 import { Study } from 'components/_common/props';
 
 const AdList = () => {
   const containerRef = useRef<HTMLDivElement | null>(null); // slides를 담는 컨테이너를 저장하는 ref
   const intervalRef = useRef<NodeJS.Timeout | null>(null); // interval을 저장하는 ref
   const [current, setCurrent] = useState(1); // 현재 위치 상태
-  const [translateX, setTranslateX] = useState(0); // X축 이동으로 위치
+  const [translateX, setTranslateX] = useState(330); // X축 이동으로 위치
   const [itemCnt, setItemCnt] = useState(4); // 아이템 개수
   const [isTransiting, setIsTransiting] = useState(false); // 버튼이 클릭된 상태인지 확인
   const [isLoading, setIsLoading] = useState<boolean>(false); // 아이템 가져오기 로딩
   const [data, setData] = useState<Study[]>([]); // 홍보 중인 데이터
 
   // 데이터 불러오기 api 호출
+  const getData = async () => {
+    const res = await getPromo();
+    setData(res?.data);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     setIsLoading(true);
-    const getData = async () => {
-      const res = await promo();
-      setData(res?.data);
-      setIsLoading(false);
-    };
     getData();
   }, []);
 
@@ -66,6 +66,7 @@ const AdList = () => {
         <StudyDetail key={index} study={study} />
       ));
       setCurrent(0);
+      setTranslateX(0);
       return [...items];
     }
     return <StudyDetail study={data[0]} />;
@@ -95,7 +96,7 @@ const AdList = () => {
         );
       };
     }
-  }, []);
+  }, [containerRef.current]);
 
   // 버튼 클릭 핸들러
   const actionHandler = (mode: string) => {
@@ -163,12 +164,12 @@ const AdList = () => {
     };
   }, [current]);
 
-  // 3초마다 자동으로 넘어감
+  // 5초마다 자동으로 넘어감
   useEffect(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-    intervalRef.current = setInterval(() => actionHandler('next'), 3000);
+    intervalRef.current = setInterval(() => actionHandler('next'), 5000);
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
