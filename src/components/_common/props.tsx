@@ -16,6 +16,7 @@ export type Study = {
   promotion: boolean;
   heartCount: number;
   heart: boolean;
+  profileImage: string;
 };
 
 export const defaultStudy: Study = {
@@ -36,6 +37,7 @@ export const defaultStudy: Study = {
   promotion: false,
   heartCount: 0,
   heart: false,
+  profileImage: '',
 };
 
 export type User = {

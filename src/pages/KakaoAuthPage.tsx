@@ -14,7 +14,6 @@ const KakaoAuthPage = () => {
     const login = async () => {
       const res = await sendCode(code);
       const data = res?.data;
-      console.log('로그인', data);
       if (data) {
         setLogin({
           nickname: data.nickname,

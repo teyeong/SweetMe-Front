@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-//import data from '../mainpage/dummy-data.json';
 import StudyDetail from 'components/mainpage/StudyDetail';
 import book from '../../assets/mypage/book-icon.svg';
 import { Study } from 'components/_common/props';
@@ -61,9 +60,7 @@ const StudyList = ({ type }: StudyListProps) => {
 
   const handleMoreClick = () => {
     if (index + 24 > data.length) {
-      console.log(data.length);
       setItemList(itemList.concat(data.slice(index, data.length)));
-      console.log(itemList.concat(data.slice(index, data.length)));
       setIsLeft(false);
     } else {
       setItemList(itemList.concat(data.slice(index, index + 24)));

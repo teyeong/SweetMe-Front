@@ -6,17 +6,27 @@ import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { Study } from 'components/_common/props';
 import { recruitment } from 'components/_common/tags';
 import { TagWrapper, Tag } from './tagLayout';
-import defaultProfile from '../../assets/defaultProfile.jpg';
+import defaultProfile from '../../assets/default_image.png';
 
 const DetailHeader = ({ study }: { study: Study }) => {
   const [memberName, setMemberName] = useState('');
   const [createdDate, setCreatedDate] = useState('');
   const [recruitmentTag, setRecruitmentTag] = useState('');
+  const [imgsrc, setImgsrc] = useState('');
 
   const navigate = useNavigate();
   const handleIconClick = () => {
     navigate(-1);
   };
+
+  // 사용자 프로필사진 설정
+  useEffect(() => {
+    if (study.profileImage.startsWith('http://k.kakaocdn.net')) {
+      setImgsrc(study.profileImage);
+    } else {
+      setImgsrc(defaultProfile);
+    }
+  }, [study.profileImage]);
 
   // 모집 여부 태그 설정
   useEffect(() => {
@@ -56,7 +66,7 @@ const DetailHeader = ({ study }: { study: Study }) => {
         <CreateInfoWrapper>
           <CreaterInfoWrapper>
             <CreaterProfile>
-              {/* <img src="유저 프로필" alt="" /> */}
+              <img src={imgsrc} alt="" />
             </CreaterProfile>
             <CreaterName>{memberName}</CreaterName>
           </CreaterInfoWrapper>
@@ -134,6 +144,11 @@ const CreaterProfile = styled.div`
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const CreaterName = styled.span`

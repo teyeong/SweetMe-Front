@@ -22,7 +22,6 @@ const Header = () => {
 
   // 처음 가입한 사용자인지 판단 -> 닉네임 설정 모달 열기
   useEffect(() => {
-    console.log('로그인 정보', loginInfo);
     if (loginInfo.isfirst) {
       setIsNicknameModalOpen(true);
     }
@@ -51,7 +50,6 @@ const Header = () => {
       const getUser = async () => {
         const res = await getUserInfo();
         const data = res?.data;
-        console.log('유저 정보', data);
         if (data) {
           if (data.profileImage.startsWith('http://k.kakaocdn.net')) {
             setUserInfo({
@@ -60,8 +58,7 @@ const Header = () => {
               profileImage: data.profileImage,
             });
           } else {
-            const imgID = extractID(data.profileImage);
-            const imgURL = `https://drive.google.com/uc?export=view&id=${imgID}`;
+            const imgURL = defaultProfile;
             setUserInfo({
               nickname: data.nickname,
               email: data.email,
@@ -73,17 +70,6 @@ const Header = () => {
       getUser();
     }
   }, []);
-
-  function extractID(url: string): string | null {
-    const regex = /\/file\/d\/([^/]+)\//;
-    const match = url.match(regex);
-
-    if (match && match[1]) {
-      return match[1];
-    } else {
-      return null;
-    }
-  }
 
   return (
     <>
