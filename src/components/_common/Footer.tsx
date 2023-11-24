@@ -1,16 +1,20 @@
 import styled from 'styled-components';
 
+import githubMark from '../../assets/github-mark.png';
+
 const Footer = () => {
   return (
     <>
       <Div>
         <Wrapper>
           <Copyright>© Sweetie</Copyright>
-          <div>
-            <Text>이용약관</Text>
-            <Text>개인정보처리방침</Text>
-            <Text>서비스 소개</Text>
-          </div>
+          <a
+            href="https://github.com/SweetMe-Sweetie"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Img src={githubMark} />
+          </a>
         </Wrapper>
       </Div>
     </>
@@ -30,20 +34,14 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  div {
-    display: flex;
-    justify-content: space-between;
-    width: 250px;
-  }
+`;
+
+const Img = styled.img`
+  width: 50px;
 `;
 
 const Copyright = styled.p`
-  font-size: 13px;
-`;
-
-const Text = styled.p`
-  font-size: 13px;
-  cursor: pointer;
+  font-size: 15px;
 `;
 
 export default Footer;
