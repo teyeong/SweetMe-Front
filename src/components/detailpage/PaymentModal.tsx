@@ -1,22 +1,11 @@
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import kakaopayImg from '../../assets/kakao_pay_button.png';
+import { UserInfoAtom } from 'recoil/User';
 
 import { requestPayment } from 'api/payment';
-
-interface PaymentInfo {
-  postId: number | 0;
-  pg: string | '';
-  merchant_uid: string | '';
-  name: string | '';
-  amount: number | 0;
-  buyer_name: string | '';
-  buyer_email: string | '';
-  promotion: boolean | false;
-  createdDate: string | '';
-}
 
 const PaymentModal = () => {
   const { postId } = useParams();
@@ -24,37 +13,36 @@ const PaymentModal = () => {
 
   const navigate = useNavigate();
 
-  const [requestPayResponse, setRequestPayResponse] = useState<PaymentInfo>();
+  const userInfo = useRecoilValue(UserInfoAtom);
 
   const { IMP } = window;
   IMP.init('imp12737001');
 
   const requestPay = () => {
-    // 주문정보 생성 & 결과 저장
-    requestPayment(postIdAsNumber).then((res) => {
-      setRequestPayResponse(res?.data as PaymentInfo);
-    });
-
-    const data = {
-      pg: 'kakaopay.TC0ONETIME',
-      merchant_uid: `${requestPayResponse?.merchant_uid}`,
-      name: '스윗미 모집글 홍보비',
-      amount: 1000,
-      buyer_name: `${requestPayResponse?.buyer_name}`,
-      buyer_email: `${requestPayResponse?.buyer_email}`,
-    };
     // 결제 요청
-    IMP.request_pay(data, callback);
-  };
-
-  const callback = (res: any) => {
-    if (res.success) {
-      alert('결제 성공');
-      navigate(`/`);
-    } else {
-      console.log(res);
-      alert('결제 실패');
-    }
+    IMP.request_pay(
+      {
+        pg: 'kakaopay.TC0ONETIME',
+        merchant_uid: `${new Date().getTime() + postIdAsNumber} `,
+        name: '스윗미 모집글 홍보비',
+        amount: 1000,
+        buyer_name: userInfo.nickname,
+        buyer_email: userInfo.email,
+      },
+      function (res: any) {
+        if (res.success) {
+          // 결제 정보 POST 요청
+          requestPayment(postIdAsNumber).then((res) => {
+            console.log(res);
+          });
+          alert('결제 성공');
+        } else {
+          console.log(res);
+          alert('결제 실패');
+        }
+        navigate(`/`);
+      },
+    );
   };
 
   return (
@@ -69,7 +57,7 @@ const PaymentModal = () => {
           * 홍보 시 메인화면 상단 배너에 모집글이 게시됩니다.
         </Description>
         <PaymentButtonWrapper>
-          <PaymentButton src={kakaopayImg} onClick={requestPay} />
+          <PaymentButton src={kakaopayImg} onClick={() => requestPay()} />
         </PaymentButtonWrapper>
       </Main>
     </Wrapper>
