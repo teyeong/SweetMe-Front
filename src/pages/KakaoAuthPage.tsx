@@ -21,7 +21,7 @@ const KakaoAuthPage = () => {
           email: data.email,
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
-          isFirst: data.isFirst,
+          isfirst: data.isfirst,
         });
         window.localStorage.setItem('accessToken', data.accessToken);
         setLoginState(true);
@@ -32,29 +32,7 @@ const KakaoAuthPage = () => {
     login();
   }, []);
 
-  /*
-  useEffect(() => {
-    console.log('사용자 정보 불러오기');
-    const token = window.localStorage.getItem('accessToken') || '';
-    const getUser = async () => {
-      const res = await getUserInfo(token);
-      const data = res?.data;
-      console.log('유저 정보', data);
-      if (data) {
-        setUserInfo({
-          nickname: data.nickname,
-          email: data.email,
-          profileImage: data.profileImage,
-        });
-      }
-    };
-    if (token !== '') {
-      getUser();
-      window.location.href = '/';
-    }
-  }, [isLoggedIn]);
-  */
-  return <>로그인 중</>;
+  return <></>;
 };
 
 export default KakaoAuthPage;
